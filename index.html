@@ -25,26 +25,38 @@
 </header>
 
 <main>
-  <section class="card">
-    <div class="wax-seal" aria-hidden="true">❤</div>
-    <h2 class="section-title" style="margin-top:1rem;">Uma cartinha antes de começar</h2>
-    <p class="lede">
-      Fiz esse site pensando em você — um lugarzinho pra guardar nossas fotos, os bichinhos que
-      amamos, as músicas que marcam a gente e umas ideias pra tornar nossos dias mais gostosos:
-      sortear um filme pra assistir ou uma receita pra cozinharmos juntos. Vá explorando os
-      cantinhos aí em cima, no seu tempo. 💌
-    </p>
-    <p class="lede">
-      Cada página é um pedacinho nosso — e ainda dá pra ir enchendo aos poucos, com mais fotos,
-      mais músicas, mais memórias.
-    </p>
-    <a class="btn" href="album.html">Começar pelo álbum →</a>
+  <section class="card letter-card" id="letter-card">
+    <div class="envelope-seal" id="envelope-seal">
+      <button type="button" class="seal-button" id="seal-button" aria-expanded="false" aria-controls="letter-content" aria-label="Abrir a carta">
+        <img src="img/selo-vz.png" alt="" class="seal-img" draggable="false">
+      </button>
+      <p class="seal-hint">toque no selo para abrir a carta</p>
+    </div>
+
+    <div class="letter-content" id="letter-content" hidden>
+      <div class="wax-seal" aria-hidden="true">❤</div>
+      <h2 class="section-title" style="margin-top:1rem;">Uma cartinha antes de começar</h2>
+      <p class="lede">
+        Fiz esse site pensando em você — um lugarzinho pra guardar nossas fotos, os bichinhos que
+        amamos, as músicas que marcam a gente e umas ideias pra tornar nossos dias mais gostosos:
+        sortear um filme pra assistir ou uma receita pra cozinharmos juntos. Vá explorando os
+        cantinhos aí em cima, no seu tempo. 💌
+      </p>
+      <p class="lede">
+        Cada página é um pedacinho nosso — e ainda dá pra ir enchendo aos poucos, com mais fotos,
+        mais músicas, mais memórias.
+      </p>
+      <a class="btn" href="album.html">Começar pelo álbum →</a>
+    </div>
   </section>
 </main>
 
 <footer class="site-footer">Te amo, Te sinto e Te vejo ♥️</footer>
 
 <script src="js/script.js"></script>
+<script>
+  initLetterSeal();
+</script>
 <script src="js/pets-data.js"></script>
 <script>
   initPetScene(PETS_BICHINHOS);
