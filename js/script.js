@@ -37,7 +37,7 @@ const FILMES = [
   "You",
   "Brooklyn Nine-Nine",
   "Ratatouille",
-  "The Grand Budapest Hotel",
+  "O Grande Hotel Budapest",
   // adicione mais filmes e séries de vocês aqui
 ];
 
@@ -304,6 +304,39 @@ function renderPlaylists(containerId, playlists) {
       </iframe>
     </div>
   `).join("");
+}
+
+// ---- Carta lacrada da página inicial (abre ao clicar no selo) ----
+function initLetterSeal() {
+  const card = document.getElementById("letter-card");
+  const envelope = document.getElementById("envelope-seal");
+  const button = document.getElementById("seal-button");
+  const letter = document.getElementById("letter-content");
+  if (!card || !envelope || !button || !letter) return;
+
+  const reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function abrirCarta() {
+    button.setAttribute("aria-expanded", "true");
+    card.classList.add("is-open");
+
+    const mostrarCarta = () => {
+      letter.hidden = false;
+      requestAnimationFrame(() => letter.classList.add("is-visible"));
+    };
+
+    if (reduzMovimento) {
+      envelope.style.display = "none";
+      mostrarCarta();
+    } else {
+      envelope.addEventListener("transitionend", () => {
+        envelope.style.display = "none";
+      }, { once: true });
+      setTimeout(mostrarCarta, 320);
+    }
+  }
+
+  button.addEventListener("click", abrirCarta);
 }
 
 // ---- Bichinhos animados (pixel art andando / sentando / deitando) ----
