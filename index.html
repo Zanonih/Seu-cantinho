@@ -26,14 +26,8 @@
 
 <main>
   <section class="card letter-card" id="letter-card">
-    <div class="envelope-seal" id="envelope-seal">
-      <button type="button" class="seal-button" id="seal-button" aria-expanded="false" aria-controls="letter-content" aria-label="Abrir a carta">
-        <img src="img/selo-vz.png" alt="" class="seal-img" draggable="false">
-      </button>
-      <p class="seal-hint">toque no selo para abrir a carta</p>
-    </div>
 
-    <div class="letter-content" id="letter-content" hidden>
+    <div class="letter-content" id="letter-content" aria-hidden="true">
       <div class="wax-seal" aria-hidden="true">❤</div>
       <h2 class="section-title" style="margin-top:1rem;">Uma cartinha antes de começar</h2>
       <p class="lede">
@@ -46,8 +40,17 @@
         Cada página é um pedacinho nosso — e ainda dá pra ir enchendo aos poucos, com mais fotos,
         mais músicas, mais memórias.
       </p>
-      <a class="btn" href="album.html">Começar pelo álbum →</a>
+      <a class="btn" id="letter-cta" href="album.html" tabindex="-1">Começar pelo álbum →</a>
     </div>
+
+    <div class="envelope-overlay" id="envelope-overlay">
+      <div class="envelope-pocket"></div>
+      <div class="envelope-flap" id="envelope-flap"></div>
+      <button type="button" class="seal-button" id="seal-button" aria-expanded="false" aria-controls="letter-content" aria-label="Abrir a carta">
+        <img src="img/selo-vz.png" alt="" class="seal-img" draggable="false">
+      </button>
+    </div>
+
   </section>
 </main>
 
