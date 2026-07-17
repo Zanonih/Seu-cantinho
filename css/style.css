@@ -631,6 +631,83 @@ h2.section-title {
   .timeline-content { max-width: 100%; }
 }
 
+/* -------- Carta lacrada (página inicial) -------- */
+
+.letter-card {
+  min-height: 260px;
+}
+
+.envelope-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 6vw, 3.5rem) 1rem;
+  text-align: center;
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+.letter-card.is-open .envelope-seal {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+.seal-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.seal-img {
+  width: clamp(110px, 26vw, 168px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 18px rgba(110, 43, 58, 0.35));
+  transition: transform 0.25s ease, filter 0.25s ease;
+  animation: seal-breathe 3.6s ease-in-out infinite;
+}
+
+.seal-button:hover .seal-img,
+.seal-button:focus-visible .seal-img {
+  transform: scale(1.06) rotate(-2deg);
+  filter: drop-shadow(0 14px 22px rgba(110, 43, 58, 0.45));
+}
+
+.seal-button:active .seal-img {
+  transform: scale(0.96) rotate(1deg);
+}
+
+@keyframes seal-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+.seal-hint {
+  font-family: var(--body);
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.letter-content {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.letter-content.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal-img { animation: none; }
+}
+
 /* -------- Bichinhos animados, soltos por cima da página -------- */
 
 .pet-layer {
