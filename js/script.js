@@ -101,24 +101,35 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ---- Galeria + lightbox ----
-function initGallery(gridId, items) {
-  const grid = document.getElementById(gridId);
-  if (!grid) return;
+// ---- Álbum em linha do tempo + lightbox ----
+// Cada item em `items` pode ter { data, src, alt, legenda }. Mantém o mesmo
+// efeito de inclinar ao passar o mouse (classe .gallery-item) e o mesmo
+// lightbox de sempre, só que organizado como uma linha do tempo, alternando
+// os cartões pra esquerda e pra direita.
+function initTimeline(containerId, items) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  grid.innerHTML = items.map((item, i) => `
-    <button class="gallery-item" style="--tilt:${(i % 5 - 2) * 1.4}deg" data-index="${i}" aria-label="Ver foto: ${item.alt}">
-      ${item.src
-        ? `<img src="${item.src}" alt="${item.alt}" loading="lazy">`
-        : `<span class="placeholder-label">📷<br>${item.alt}</span>`
-      }
-    </button>
+  container.innerHTML = items.map((item, i) => `
+    <div class="timeline-item ${i % 2 === 0 ? "is-left" : "is-right"}">
+      <span class="timeline-marker" aria-hidden="true"></span>
+      <div class="timeline-content">
+        ${item.data ? `<p class="timeline-date">${item.data}</p>` : ""}
+        <button class="gallery-item timeline-photo" style="--tilt:${(i % 5 - 2) * 1.4}deg" data-index="${i}" aria-label="Ver foto: ${item.alt}">
+          ${item.src
+            ? `<img src="${item.src}" alt="${item.alt}" loading="lazy">`
+            : `<span class="placeholder-label">📷<br>${item.alt}</span>`
+          }
+        </button>
+        ${item.legenda ? `<p class="timeline-caption">${item.legenda}</p>` : ""}
+      </div>
+    </div>
   `).join("");
 
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = lightbox.querySelector("img");
 
-  grid.querySelectorAll(".gallery-item").forEach((btn) => {
+  container.querySelectorAll(".timeline-photo").forEach((btn) => {
     btn.addEventListener("click", () => {
       const item = items[Number(btn.dataset.index)];
       if (!item.src) return;
