@@ -631,38 +631,84 @@ h2.section-title {
   .timeline-content { max-width: 100%; }
 }
 
-/* -------- Carta lacrada (página inicial) -------- */
+/* -------- Carta lacrada (página inicial), estilo envelope -------- */
 
 .letter-card {
-  min-height: 260px;
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
 }
 
-.envelope-seal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.1rem;
-  padding: clamp(1.5rem, 6vw, 3.5rem) 1rem;
-  text-align: center;
-  transition: opacity 0.32s ease, transform 0.32s ease;
-}
-
-.letter-card.is-open .envelope-seal {
+.letter-content {
+  position: relative;
+  z-index: 1;
   opacity: 0;
-  transform: scale(0.9);
-  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+}
+
+.letter-content.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.envelope-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  perspective: 1300px;
+}
+
+.envelope-pocket {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(155deg, #F3E6DA 0%, #E9D6C4 55%, #E3CBB6 100%);
+  transition: opacity 0.5s ease 0.55s, transform 0.5s ease 0.55s;
+}
+
+.envelope-pocket::before {
+  /* linha de dobra inferior do envelope, sugerindo o bolso */
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 14%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,43,58,0.18), transparent);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: linear-gradient(160deg, #F0E1D3 0%, #DFC5AC 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.65s cubic-bezier(.45,.1,.25,1) 0.12s;
+  backface-visibility: hidden;
+  box-shadow: 0 3px 10px rgba(74, 24, 32, 0.12);
 }
 
 .seal-button {
+  position: absolute;
+  top: calc(52% - 46px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 3;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
   border-radius: 50%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .seal-img {
-  width: clamp(110px, 26vw, 168px);
+  width: clamp(96px, 22vw, 140px);
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 18px rgba(110, 43, 58, 0.35));
@@ -676,36 +722,31 @@ h2.section-title {
   filter: drop-shadow(0 14px 22px rgba(110, 43, 58, 0.45));
 }
 
-.seal-button:active .seal-img {
-  transform: scale(0.96) rotate(1deg);
-}
+.seal-button:active .seal-img { transform: scale(0.96) rotate(1deg); }
 
 @keyframes seal-breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.035); }
 }
 
-.seal-hint {
-  font-family: var(--body);
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-.letter-content {
+/* sequência de abertura */
+.letter-card.is-open .seal-button {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translate(-50%, 0) scale(0.5) rotate(12deg);
 }
 
-.letter-content.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.letter-card.is-open .envelope-flap {
+  transform: rotateX(-165deg);
+}
+
+.letter-card.is-open .envelope-pocket {
+  opacity: 0;
+  transform: translateY(-18px);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .seal-img { animation: none; }
+  .envelope-flap, .envelope-pocket, .seal-button, .letter-content { transition: none; }
 }
 
 /* -------- Bichinhos animados, soltos por cima da página -------- */
