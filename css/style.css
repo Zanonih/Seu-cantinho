@@ -531,6 +531,106 @@ h2.section-title {
   .slot-machine { padding: 0.9rem 0.7rem 1.1rem; }
 }
 
+/* -------- Álbum em linha do tempo -------- */
+
+.timeline {
+  position: relative;
+  margin-top: 2.4rem;
+  padding: 0.5rem 0 0.5rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--rose-deep) 0 8px,
+    transparent 8px 18px
+  );
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  width: 50%;
+  padding: 0 2.6rem 3rem;
+  box-sizing: border-box;
+}
+
+.timeline-item.is-left {
+  left: 0;
+  text-align: right;
+}
+
+.timeline-item.is-right {
+  left: 50%;
+  text-align: left;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 0.3rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--wine);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--rose-deep);
+}
+
+.timeline-item.is-left .timeline-marker { right: -8px; }
+.timeline-item.is-right .timeline-marker { left: -8px; }
+
+.timeline-content {
+  display: inline-block;
+  max-width: 260px;
+}
+
+.timeline-date {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--rose-deep);
+  font-size: 1rem;
+  margin: 0 0 0.6rem;
+}
+
+.timeline-photo.gallery-item {
+  width: 220px;
+  max-width: 100%;
+}
+
+.timeline-caption {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0.7rem 0 0;
+}
+
+@media (max-width: 640px) {
+  .timeline::before { left: 18px; }
+
+  .timeline-item,
+  .timeline-item.is-left,
+  .timeline-item.is-right {
+    width: 100%;
+    left: 0;
+    text-align: left;
+    padding: 0 0 2.8rem 2.8rem;
+  }
+
+  .timeline-item.is-left .timeline-marker,
+  .timeline-item.is-right .timeline-marker {
+    left: 10px;
+    right: auto;
+  }
+
+  .timeline-content { max-width: 100%; }
+}
+
 /* -------- Bichinhos animados, soltos por cima da página -------- */
 
 .pet-layer {
