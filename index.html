@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Você</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="inicio">
+
+<header class="site-header">
+  <p class="site-subtitle">eu cantinho</p>
+  <h1 class="site-title">Para Você</h1>
+  <nav aria-label="Navegação principal">
+    <ul class="stamp-nav">
+      <li><a href="index.html" data-page="inicio"><span class="icon">🏠</span>Início</a></li>
+      <li><a href="album.html" data-page="album"><span class="icon">🖼️</span>Álbum</a></li>
+      <li><a href="musica.html" data-page="musica"><span class="icon">🎵</span>Música</a></li>
+      <li><a href="filmes.html" data-page="filmes"><span class="icon">🎬</span>Filmes</a></li>
+      <li><a href="receitas.html" data-page="receitas"><span class="icon">🍳</span>Receitas</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <div class="wax-seal" aria-hidden="true">❤</div>
+    <h2 class="section-title" style="margin-top:1rem;">Uma cartinha antes de começar</h2>
+    <p class="lede">
+      Fiz esse site pensando em você — um lugarzinho pra guardar nossas fotos, os bichinhos que
+      amamos, as músicas que marcam a gente e umas ideias pra tornar nossos dias mais gostosos:
+      sortear um filme pra assistir ou uma receita pra cozinharmos juntos. Vá explorando os
+      cantinhos aí em cima, no seu tempo. 💌
+    </p>
+    <p class="lede">
+      Cada página é um pedacinho nosso — e ainda dá pra ir enchendo aos poucos, com mais fotos,
+      mais músicas, mais memórias.
+    </p>
+    <a class="btn" href="album.html">Começar pelo álbum →</a>
+  </section>
+</main>
+
+<footer class="site-footer">feito com carinho, para você 💛</footer>
+
+<script src="js/script.js"></script>
+<script src="js/pets-data.js"></script>
+<script>
+  initPetScene(PETS_BICHINHOS);
+</script>
+</body>
+</html>
