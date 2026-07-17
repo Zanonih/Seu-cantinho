@@ -37,7 +37,7 @@ const FILMES = [
   "You",
   "Brooklyn Nine-Nine",
   "Ratatouille",
-  "O Grande Hotel Budapest",
+  "The Grand Budapest Hotel",
   // adicione mais filmes e séries de vocês aqui
 ];
 
@@ -306,34 +306,39 @@ function renderPlaylists(containerId, playlists) {
   `).join("");
 }
 
-// ---- Carta lacrada da página inicial (abre ao clicar no selo) ----
+// ---- Carta lacrada da página inicial (envelope que abre ao clicar no selo) ----
 function initLetterSeal() {
   const card = document.getElementById("letter-card");
-  const envelope = document.getElementById("envelope-seal");
+  const overlay = document.getElementById("envelope-overlay");
   const button = document.getElementById("seal-button");
   const letter = document.getElementById("letter-content");
-  if (!card || !envelope || !button || !letter) return;
+  const cta = document.getElementById("letter-cta");
+  if (!card || !overlay || !button || !letter) return;
 
   const reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function abrirCarta() {
     button.setAttribute("aria-expanded", "true");
-    card.classList.add("is-open");
+    button.disabled = true;
 
-    const mostrarCarta = () => {
-      letter.hidden = false;
-      requestAnimationFrame(() => letter.classList.add("is-visible"));
-    };
+    letter.setAttribute("aria-hidden", "false");
+    if (cta) cta.removeAttribute("tabindex");
 
     if (reduzMovimento) {
-      envelope.style.display = "none";
-      mostrarCarta();
-    } else {
-      envelope.addEventListener("transitionend", () => {
-        envelope.style.display = "none";
-      }, { once: true });
-      setTimeout(mostrarCarta, 320);
+      overlay.style.display = "none";
+      letter.classList.add("is-visible");
+      return;
     }
+
+    card.classList.add("is-open");
+    letter.classList.add("is-visible");
+
+    overlay.addEventListener("transitionend", (e) => {
+      if (e.target === overlay) overlay.style.display = "none";
+    }, { once: true });
+
+    // fallback caso transitionend não dispare nesse elemento específico
+    setTimeout(() => { overlay.style.display = "none"; }, 1300);
   }
 
   button.addEventListener("click", abrirCarta);
