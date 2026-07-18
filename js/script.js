@@ -160,7 +160,7 @@ function initTimeline(containerId, items) {
 // (por isso nunca repete duas vezes seguidas). O botão de reset devolve
 // tudo pro grupo disponível de novo.
 function initReel(config) {
-  const { buttonId, resetButtonId, windowId, listId, poolListId, noteId, items } = config;
+  const { buttonId, resetButtonId, windowId, listId, poolListId, noteId, items, storageKey } = config;
   const button = document.getElementById(buttonId);
   const resetButton = document.getElementById(resetButtonId);
   const windowEl = document.getElementById(windowId);
@@ -169,10 +169,32 @@ function initReel(config) {
   const noteEl = noteId ? document.getElementById(noteId) : null;
   if (!button || !windowEl || !listEl || !items || items.length === 0) return;
 
+  const CHAVE = storageKey ? `cantinho:sorteados:${storageKey}` : null;
+
+  function carregarSorteados() {
+    if (!CHAVE) return [];
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+      // só mantém nomes que ainda existem na lista atual
+      return Array.isArray(salvo) ? salvo.filter((nome) => items.includes(nome)) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function salvarSorteados() {
+    if (!CHAVE) return;
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify(sorteados));
+    } catch {
+      // se o navegador bloquear localStorage (modo privado etc.), só não persiste
+    }
+  }
+
   const ITEM_HEIGHT = 56;
   let spinning = false;
-  let disponiveis = [...items];
-  let sorteados = [];
+  let sorteados = carregarSorteados();
+  let disponiveis = items.filter((nome) => !sorteados.includes(nome));
 
   function rand(min, max) {
     return Math.random() * (max - min) + min;
@@ -251,6 +273,7 @@ function initReel(config) {
 
         disponiveis = disponiveis.filter((nome) => nome !== alvo);
         if (!sorteados.includes(alvo)) sorteados.push(alvo);
+        salvarSorteados();
         renderPool();
         atualizarEstado();
       }, { once: true });
@@ -262,6 +285,7 @@ function initReel(config) {
       if (spinning) return;
       disponiveis = [...items];
       sorteados = [];
+      salvarSorteados();
       windowEl.classList.remove("landed");
       listEl.style.transition = "none";
       listEl.innerHTML = `<div class="reel-item">?</div>`;
