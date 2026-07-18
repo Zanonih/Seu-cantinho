@@ -74,6 +74,56 @@ a { color: inherit; text-decoration: none; }
   margin: 0 0 1.6rem;
 }
 
+/* -------- Contador de tempo juntos -------- */
+
+.love-counter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 2.5vw, 1.4rem);
+  margin: 0 0 0.6rem;
+}
+
+.love-counter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+}
+
+.love-counter-value {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  color: var(--wine);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.love-counter-label {
+  font-family: var(--body);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 0.25rem;
+}
+
+.love-counter-caption {
+  text-align: center;
+  font-family: var(--body);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0 0 1.6rem;
+}
+
+@media (max-width: 480px) {
+  .love-counter { gap: 0.5rem; }
+  .love-counter-item { min-width: 38px; }
+}
+
 .stamp-nav {
   display: flex;
   flex-wrap: wrap;
