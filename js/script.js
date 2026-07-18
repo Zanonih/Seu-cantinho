@@ -330,6 +330,61 @@ function renderPlaylists(containerId, playlists) {
   `).join("");
 }
 
+// ---- Contador de tempo juntos (anos, meses, dias, h:min:seg ao vivo) ----
+function initLoveCounter(dataInicioISO) {
+  const inicio = new Date(dataInicioISO);
+  const els = {
+    anos: document.getElementById("lc-anos"),
+    meses: document.getElementById("lc-meses"),
+    dias: document.getElementById("lc-dias"),
+    horas: document.getElementById("lc-horas"),
+    minutos: document.getElementById("lc-minutos"),
+    segundos: document.getElementById("lc-segundos"),
+  };
+  if (!els.anos || isNaN(inicio.getTime())) return;
+
+  function doisDigitos(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function calcularDiferenca(agora) {
+    let anos = agora.getFullYear() - inicio.getFullYear();
+    let meses = agora.getMonth() - inicio.getMonth();
+    let dias = agora.getDate() - inicio.getDate();
+    let horas = agora.getHours() - inicio.getHours();
+    let minutos = agora.getMinutes() - inicio.getMinutes();
+    let segundos = agora.getSeconds() - inicio.getSeconds();
+
+    if (segundos < 0) { segundos += 60; minutos--; }
+    if (minutos < 0) { minutos += 60; horas--; }
+    if (horas < 0) { horas += 24; dias--; }
+    if (dias < 0) {
+      // pega quantos dias tinha o mês anterior ao mês atual
+      const mesAnterior = new Date(agora.getFullYear(), agora.getMonth(), 0);
+      dias += mesAnterior.getDate();
+      meses--;
+    }
+    if (meses < 0) { meses += 12; anos--; }
+
+    return { anos, meses, dias, horas, minutos, segundos };
+  }
+
+  function atualizar() {
+    const agora = new Date();
+    if (agora < inicio) return; // data no futuro, não conta
+    const d = calcularDiferenca(agora);
+    els.anos.textContent = d.anos;
+    els.meses.textContent = d.meses;
+    els.dias.textContent = d.dias;
+    els.horas.textContent = doisDigitos(d.horas);
+    els.minutos.textContent = doisDigitos(d.minutos);
+    els.segundos.textContent = doisDigitos(d.segundos);
+  }
+
+  atualizar();
+  setInterval(atualizar, 1000);
+}
+
 // ---- Carta lacrada da página inicial (envelope que abre ao clicar no selo) ----
 function initLetterSeal() {
   const card = document.getElementById("letter-card");
