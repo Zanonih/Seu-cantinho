@@ -72,6 +72,25 @@ const RECEITAS = [
   "Berinjela a parmegiana",
 ];
 
+// Lista de desejos / sonhos a dois — marque o que já foi feito.
+// Pra adicionar mais, é só colar um novo texto entre aspas e vírgula.
+// O que já foi marcado fica salvo no navegador de quem marcou.
+const DESEJOS = [
+  "Viajar pra praia juntos",
+  "Fazer uma trilha ao ar livre",
+  "Ir a um show de uma banda que a gente ama",
+  "Aprender uma receita nova juntos",
+  "Maratonar uma série nova do início ao fim",
+  "Tirar uma foto polaroid pra colar no álbum",
+  "Fazer um piquenique",
+  "Visitar um lugar novo na cidade",
+  "Acampar uma noite",
+  "Assistir o pôr do sol num lugar bonito",
+  "Cozinhar juntos pra amigos",
+  "Dar um rolê só pra tirar foto boba",
+  // adicione mais desejos aqui
+];
+
 // Cole aqui o link normal de cada playlist do Spotify (o mesmo que aparece
 // quando você clica em "Compartilhar → Copiar link da playlist").
 // Não precisa mexer em mais nada — o site converte pro player sozinho.
@@ -382,6 +401,113 @@ function initLoveCounter(dataInicioISO) {
     els.horas.textContent = doisDigitos(d.horas);
     els.minutos.textContent = doisDigitos(d.minutos);
     els.segundos.textContent = doisDigitos(d.segundos);
+  }
+
+  atualizar();
+  setInterval(atualizar, 1000);
+}
+
+// ---- Lista de desejos (marca e desmarca, guardado no navegador) ----
+function initWishlist(listId, items, storageKey) {
+  const listEl = document.getElementById(listId);
+  if (!listEl || !items) return;
+
+  const CHAVE = `cantinho:desejos:${storageKey}`;
+
+  function carregarMarcados() {
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+      return Array.isArray(salvo) ? salvo.filter((texto) => items.includes(texto)) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function salvarMarcados(marcados) {
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify(marcados));
+    } catch {
+      // modo privado ou localStorage bloqueado — só não persiste
+    }
+  }
+
+  let marcados = carregarMarcados();
+
+  function atualizarContador() {
+    const contador = document.getElementById(`${listId}-contador`);
+    if (contador) contador.textContent = `${marcados.length} de ${items.length} já realizados`;
+  }
+
+  function render() {
+    listEl.innerHTML = items.map((texto, i) => {
+      const feito = marcados.includes(texto);
+      const id = `${listId}-item-${i}`;
+      return `
+        <li class="wishlist-item ${feito ? "is-done" : ""}">
+          <label for="${id}">
+            <input type="checkbox" id="${id}" data-texto="${i}" ${feito ? "checked" : ""}>
+            <span class="wishlist-check" aria-hidden="true"></span>
+            <span class="wishlist-text">${texto}</span>
+          </label>
+        </li>`;
+    }).join("");
+    atualizarContador();
+  }
+
+  listEl.addEventListener("change", (e) => {
+    const input = e.target.closest("input[type=checkbox]");
+    if (!input) return;
+    const texto = items[Number(input.dataset.texto)];
+    if (input.checked) {
+      if (!marcados.includes(texto)) marcados.push(texto);
+    } else {
+      marcados = marcados.filter((t) => t !== texto);
+    }
+    salvarMarcados(marcados);
+    input.closest(".wishlist-item").classList.toggle("is-done", input.checked);
+    atualizarContador();
+  });
+
+  render();
+}
+
+// ---- Cápsula do tempo (fica lacrada até a data marcada) ----
+function initTimeCapsule(dataAberturaISO) {
+  const dataAbertura = new Date(dataAberturaISO);
+  const lacrada = document.getElementById("capsula-lacrada");
+  const aberta = document.getElementById("capsula-aberta");
+  const contagem = {
+    dias: document.getElementById("cap-dias"),
+    horas: document.getElementById("cap-horas"),
+    minutos: document.getElementById("cap-minutos"),
+    segundos: document.getElementById("cap-segundos"),
+  };
+  if (!lacrada || !aberta) return;
+
+  function mostrarAberta() {
+    lacrada.hidden = true;
+    aberta.hidden = false;
+  }
+
+  function atualizar() {
+    const agora = new Date();
+    const diffMs = dataAbertura - agora;
+
+    if (diffMs <= 0) {
+      mostrarAberta();
+      return;
+    }
+
+    const segTotal = Math.floor(diffMs / 1000);
+    const dias = Math.floor(segTotal / 86400);
+    const horas = Math.floor((segTotal % 86400) / 3600);
+    const minutos = Math.floor((segTotal % 3600) / 60);
+    const segundos = segTotal % 60;
+
+    if (contagem.dias) contagem.dias.textContent = dias;
+    if (contagem.horas) contagem.horas.textContent = String(horas).padStart(2, "0");
+    if (contagem.minutos) contagem.minutos.textContent = String(minutos).padStart(2, "0");
+    if (contagem.segundos) contagem.segundos.textContent = String(segundos).padStart(2, "0");
   }
 
   atualizar();

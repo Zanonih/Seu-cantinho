@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Álbum · Para Você</title>
+<title>Cápsula do Tempo · Para Você</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="album">
+<body data-page="capsula">
 
 <header class="site-header">
   <p class="site-subtitle">seu cantinho</p>
@@ -39,18 +39,36 @@
 </header>
 
 <main>
-  <section class="card">
-    <div class="wax-seal" aria-hidden="true">🖼</div>
-    <h2 class="section-title" style="margin-top:1rem;">Nossa história</h2>
+  <section class="card" style="text-align:center;">
 
-    <div class="timeline" id="album-timeline"></div>
+    <div id="capsula-lacrada">
+      <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🔒</div>
+      <h2 class="section-title" style="margin-top:1rem;">Uma cápsula do tempo</h2>
+      <p class="lede" style="margin:0 auto;">
+        Guardei uma mensagem aqui que só vai poder ser aberta no nosso próximo
+        aniversário de namoro. Falta:
+      </p>
+
+      <div class="love-counter capsula-countdown" aria-label="Tempo até abrir">
+        <div class="love-counter-item"><span class="love-counter-value" id="cap-dias">0</span><span class="love-counter-label">dias</span></div>
+        <div class="love-counter-item"><span class="love-counter-value" id="cap-horas">00</span><span class="love-counter-label">h</span></div>
+        <div class="love-counter-item"><span class="love-counter-value" id="cap-minutos">00</span><span class="love-counter-label">min</span></div>
+        <div class="love-counter-item"><span class="love-counter-value" id="cap-segundos">00</span><span class="love-counter-label">seg</span></div>
+      </div>
+    </div>
+
+    <div id="capsula-aberta" hidden>
+      <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">💌</div>
+      <h2 class="section-title" style="margin-top:1rem;">Chegou o dia!</h2>
+      <p class="lede" style="margin:0 auto;">
+        <!-- Escreva aqui a mensagem da cápsula do tempo. -->
+        Ainda vou escrever essa mensagem — mas ela vai estar aqui te esperando
+        quando esse dia chegar. 💛
+      </p>
+    </div>
+
   </section>
 </main>
-
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" aria-label="Fechar">✕</button>
-  <img src="" alt="">
-</div>
 
 <footer class="site-footer">
   <p class="footer-line">Te amo, Te sinto e Te vejo ♥️</p>
@@ -62,10 +80,7 @@
 <script src="js/script.js"></script>
 <script>
   initLoveCounter("2025-06-19T23:35:00");
-</script>
-<script src="js/album-data.js"></script>
-<script>
-  initTimeline("album-timeline", ALBUM_FOTOS);
+  initTimeCapsule("2027-06-19T00:00:00");
 </script>
 <script src="js/pets-data.js"></script>
 <script>

@@ -867,3 +867,141 @@ h2.section-title {
   0%   { opacity: 1; transform: translate(-50%, 0) scale(0.6); }
   100% { opacity: 0; transform: translate(-50%, -30px) scale(1.2); }
 }
+
+/* -------- Bichinhos (bio de cada pet) -------- */
+
+.pet-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.4rem;
+  margin-top: 1.8rem;
+  text-align: left;
+}
+
+.pet-bio-card {
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(74, 24, 32, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.pet-bio-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-bio-card h3 {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.25rem;
+  margin: 0.7rem 1rem 0.2rem;
+}
+
+.pet-bio-card p {
+  font-family: var(--body);
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0 1rem 1rem;
+}
+
+.pet-bio-card.is-memory {
+  border-color: rgba(201, 162, 75, 0.4);
+  background: linear-gradient(180deg, var(--paper) 80%, rgba(201, 162, 75, 0.08));
+}
+
+.pet-bio-card.is-memory img {
+  filter: saturate(0.92);
+}
+
+/* -------- Lista de desejos -------- */
+
+.wishlist-contador {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.03em;
+  margin: 1.4rem 0 0.6rem;
+}
+
+.wishlist {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 480px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wishlist-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.1);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.wishlist-item label:hover {
+  border-color: rgba(110, 43, 58, 0.28);
+}
+
+.wishlist-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.wishlist-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--rose-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.wishlist-item input:checked ~ .wishlist-check {
+  background: var(--wine);
+  border-color: var(--wine);
+}
+
+.wishlist-item input:checked ~ .wishlist-check::after {
+  content: "✓";
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.wishlist-text {
+  font-family: var(--body);
+  font-size: 0.94rem;
+  color: var(--ink);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.wishlist-item.is-done .wishlist-text {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+/* -------- Cápsula do tempo -------- */
+
+.capsula-countdown {
+  margin-top: 1.4rem;
+}
