@@ -460,15 +460,16 @@ function initBichinhosGaleria(gridSelector, dados) {
   function abrirAlbum(petId) {
     const info = dados[petId];
     if (!info) return;
+    const fotos = info.capa ? [info.capa, ...info.fotos] : info.fotos;
     albumTitulo.textContent = info.nome;
-    albumGrid.innerHTML = info.fotos.map((src, i) => `
+    albumGrid.innerHTML = fotos.map((src, i) => `
       <button type="button" class="pet-album-thumb" data-indice="${i}">
         <img src="${src}" alt="Foto de ${info.nome}" loading="lazy">
       </button>`).join("");
 
     albumGrid.querySelectorAll(".pet-album-thumb").forEach((btn) => {
       btn.addEventListener("click", () => {
-        abrirLightbox(info.fotos, Number(btn.dataset.indice));
+        abrirLightbox(fotos, Number(btn.dataset.indice));
       });
     });
 

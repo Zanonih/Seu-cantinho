@@ -5,6 +5,7 @@
 const BICHINHOS_GALERIA = {
   maia: {
     nome: "Maia",
+    capa: "img/bichinhos/maia.jpg",
     fotos: [
       "img/bichinhos/maia-1.jpg",
       "img/bichinhos/maia-2.jpg",
@@ -22,6 +23,7 @@ const BICHINHOS_GALERIA = {
   },
   ellie: {
     nome: "Ellie",
+    capa: "img/bichinhos/ellie.jpg",
     fotos: [
       "img/bichinhos/ellie-1.jpg",
       "img/bichinhos/ellie-2.jpg",
@@ -35,30 +37,37 @@ const BICHINHOS_GALERIA = {
   },
   negao: {
     nome: "Negão",
+    capa: "img/bichinhos/negao.jpg",
     fotos: ["img/bichinhos/negao-1.jpg", "img/bichinhos/negao-2.jpg"],
   },
   pingo: {
     nome: "Pingo",
+    capa: "img/bichinhos/pingo.jpg",
     fotos: ["img/bichinhos/pingo-1.jpg", "img/bichinhos/pingo-2.jpg", "img/bichinhos/pingo-3.jpg"],
   },
   josh: {
     nome: "Josh",
+    capa: "img/bichinhos/josh.jpg",
     fotos: ["img/bichinhos/josh-1.jpg", "img/bichinhos/josh-2.jpg", "img/bichinhos/josh-3.jpg"],
   },
   vitoria: {
     nome: "Vitória",
+    capa: "img/bichinhos/vitoria.jpg",
     fotos: ["img/bichinhos/vitoria-1.jpg", "img/bichinhos/vitoria-2.jpg", "img/bichinhos/vitoria-3.jpg"],
   },
   sansara: {
     nome: "Samsara",
+    capa: "img/bichinhos/sansara.jpg",
     fotos: ["img/bichinhos/sansara-1.jpg", "img/bichinhos/sansara-2.jpg"],
   },
   hadox: {
     nome: "Hadox",
+    capa: "img/bichinhos/hadox.jpg",
     fotos: ["img/bichinhos/hadox-1.jpg", "img/bichinhos/hadox-2.jpg"],
   },
   pichula: {
     nome: "Pichula",
+    capa: "img/bichinhos/pichula.jpg",
     fotos: ["img/bichinhos/pichula-1.jpg", "img/bichinhos/pichula-2.jpg", "img/bichinhos/pichula-3.jpg"],
   },
 };
