@@ -1005,3 +1005,170 @@ h2.section-title {
 .capsula-countdown {
   margin-top: 1.4rem;
 }
+
+/* -------- Cards de bichinho clicáveis (abrem álbum) -------- */
+
+.pet-bio-card {
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pet-bio-card:hover,
+.pet-bio-card:focus-visible {
+  transform: translateY(-4px) rotate(-1deg) scale(1.02);
+  box-shadow: 0 10px 22px rgba(74, 24, 32, 0.16);
+  outline: none;
+}
+
+.pet-bio-card:nth-child(even):hover,
+.pet-bio-card:nth-child(even):focus-visible {
+  transform: translateY(-4px) rotate(1deg) scale(1.02);
+}
+
+/* -------- Modal do álbum e da foto grande -------- */
+
+.pet-modal-travado {
+  overflow: hidden;
+}
+
+.pet-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 26, 28, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+}
+
+.pet-modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pet-modal {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 1.6rem;
+  max-width: 720px;
+  width: 100%;
+  max-height: 82vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.94);
+  transition: transform 0.25s ease;
+}
+
+.pet-modal-overlay.is-open .pet-modal {
+  transform: scale(1);
+}
+
+.pet-modal h3 {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0 0 1.1rem;
+}
+
+.pet-album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.pet-album-thumb {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.pet-album-thumb:hover,
+.pet-album-thumb:focus-visible {
+  transform: scale(1.04);
+  outline: 2px solid var(--rose-deep);
+}
+
+.pet-album-thumb img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(110, 43, 58, 0.1);
+  color: var(--wine);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 2;
+}
+
+.pet-modal-close:hover { background: rgba(110, 43, 58, 0.22); }
+
+/* -------- Lightbox (foto grande) -------- */
+
+.pet-lightbox-overlay .pet-modal-close {
+  top: 1.2rem;
+  right: 1.2rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.pet-lightbox-overlay .pet-modal-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+.pet-lightbox-img {
+  max-width: min(90vw, 720px);
+  max-height: 84vh;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: scale(0.96);
+  transition: transform 0.25s ease;
+}
+
+.pet-lightbox-overlay.is-open .pet-lightbox-img {
+  transform: scale(1);
+}
+
+.pet-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pet-lightbox-nav:hover { background: rgba(255, 255, 255, 0.28); }
+.pet-lightbox-prev { left: 1rem; }
+.pet-lightbox-next { right: 1rem; }
+
+@media (max-width: 560px) {
+  .pet-lightbox-nav { width: 38px; height: 38px; font-size: 1.3rem; }
+}
