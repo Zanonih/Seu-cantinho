@@ -5,11 +5,33 @@
 const BICHINHOS_GALERIA = {
   maia: {
     nome: "Maia",
-    fotos: ["img/bichinhos/maia-1.jpg"],
+    fotos: [
+      "img/bichinhos/maia-1.jpg",
+      "img/bichinhos/maia-2.jpg",
+      "img/bichinhos/maia-3.jpg",
+      "img/bichinhos/maia-4.jpg",
+      "img/bichinhos/maia-5.jpg",
+      "img/bichinhos/maia-6.jpg",
+      "img/bichinhos/maia-7.jpg",
+      "img/bichinhos/maia-8.jpg",
+      "img/bichinhos/maia-9.jpg",
+      "img/bichinhos/maia-10.jpg",
+      "img/bichinhos/maia-11.jpg",
+      "img/bichinhos/maia-12.jpg",
+    ],
   },
   ellie: {
     nome: "Ellie",
-    fotos: ["img/bichinhos/ellie-1.jpg"],
+    fotos: [
+      "img/bichinhos/ellie-1.jpg",
+      "img/bichinhos/ellie-2.jpg",
+      "img/bichinhos/ellie-3.jpg",
+      "img/bichinhos/ellie-4.jpg",
+      "img/bichinhos/ellie-5.jpg",
+      "img/bichinhos/ellie-6.jpg",
+      "img/bichinhos/ellie-7.jpg",
+      "img/bichinhos/ellie-8.jpg",
+    ],
   },
   negao: {
     nome: "Negão",
