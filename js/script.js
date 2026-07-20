@@ -407,6 +407,114 @@ function initLoveCounter(dataInicioISO) {
   setInterval(atualizar, 1000);
 }
 
+// ---- Álbum de cada bichinho (clica no card -> abre álbum -> clica na foto -> abre grande) ----
+function initBichinhosGaleria(gridSelector, dados) {
+  const cards = document.querySelectorAll(gridSelector);
+  if (!cards.length || !dados) return;
+
+  // ---- monta as duas janelas (álbum e foto grande), uma vez só ----
+  const albumOverlay = document.createElement("div");
+  albumOverlay.className = "pet-modal-overlay";
+  albumOverlay.innerHTML = `
+    <div class="pet-modal" role="dialog" aria-modal="true" aria-labelledby="pet-album-titulo">
+      <button type="button" class="pet-modal-close" data-fechar-album aria-label="Fechar">✕</button>
+      <h3 id="pet-album-titulo"></h3>
+      <div class="pet-album-grid"></div>
+    </div>`;
+  document.body.appendChild(albumOverlay);
+
+  const lightboxOverlay = document.createElement("div");
+  lightboxOverlay.className = "pet-modal-overlay pet-lightbox-overlay";
+  lightboxOverlay.innerHTML = `
+    <button type="button" class="pet-modal-close" data-fechar-lightbox aria-label="Fechar">✕</button>
+    <button type="button" class="pet-lightbox-nav pet-lightbox-prev" aria-label="Foto anterior">‹</button>
+    <img class="pet-lightbox-img" alt="">
+    <button type="button" class="pet-lightbox-nav pet-lightbox-next" aria-label="Próxima foto">›</button>`;
+  document.body.appendChild(lightboxOverlay);
+
+  const albumTitulo = albumOverlay.querySelector("#pet-album-titulo");
+  const albumGrid = albumOverlay.querySelector(".pet-album-grid");
+  const lightboxImg = lightboxOverlay.querySelector(".pet-lightbox-img");
+
+  let fotosAtuais = [];
+  let indiceAtual = 0;
+
+  function abrirLightbox(fotos, indice) {
+    fotosAtuais = fotos;
+    indiceAtual = indice;
+    lightboxImg.src = fotosAtuais[indiceAtual];
+    lightboxOverlay.classList.add("is-open");
+    document.body.classList.add("pet-modal-travado");
+  }
+
+  function mudarFoto(delta) {
+    indiceAtual = (indiceAtual + delta + fotosAtuais.length) % fotosAtuais.length;
+    lightboxImg.src = fotosAtuais[indiceAtual];
+  }
+
+  function fecharLightbox() {
+    lightboxOverlay.classList.remove("is-open");
+    document.body.classList.remove("pet-modal-travado");
+  }
+
+  function abrirAlbum(petId) {
+    const info = dados[petId];
+    if (!info) return;
+    albumTitulo.textContent = info.nome;
+    albumGrid.innerHTML = info.fotos.map((src, i) => `
+      <button type="button" class="pet-album-thumb" data-indice="${i}">
+        <img src="${src}" alt="Foto de ${info.nome}" loading="lazy">
+      </button>`).join("");
+
+    albumGrid.querySelectorAll(".pet-album-thumb").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        abrirLightbox(info.fotos, Number(btn.dataset.indice));
+      });
+    });
+
+    albumOverlay.classList.add("is-open");
+    document.body.classList.add("pet-modal-travado");
+  }
+
+  function fecharAlbum() {
+    albumOverlay.classList.remove("is-open");
+    document.body.classList.remove("pet-modal-travado");
+  }
+
+  cards.forEach((card) => {
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Ver fotos de ${dados[card.dataset.petId]?.nome || ""}`);
+    card.addEventListener("click", () => abrirAlbum(card.dataset.petId));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        abrirAlbum(card.dataset.petId);
+      }
+    });
+  });
+
+  albumOverlay.addEventListener("click", (e) => {
+    if (e.target === albumOverlay || e.target.closest("[data-fechar-album]")) fecharAlbum();
+  });
+  lightboxOverlay.addEventListener("click", (e) => {
+    if (e.target === lightboxOverlay || e.target.closest("[data-fechar-lightbox]")) fecharLightbox();
+  });
+  lightboxOverlay.querySelector(".pet-lightbox-prev").addEventListener("click", () => mudarFoto(-1));
+  lightboxOverlay.querySelector(".pet-lightbox-next").addEventListener("click", () => mudarFoto(1));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (lightboxOverlay.classList.contains("is-open")) fecharLightbox();
+      else if (albumOverlay.classList.contains("is-open")) fecharAlbum();
+    }
+    if (lightboxOverlay.classList.contains("is-open")) {
+      if (e.key === "ArrowLeft") mudarFoto(-1);
+      if (e.key === "ArrowRight") mudarFoto(1);
+    }
+  });
+}
+
 // ---- Lista de desejos (marca e desmarca, guardado no navegador) ----
 function initWishlist(listId, items, storageKey) {
   const listEl = document.getElementById(listId);
