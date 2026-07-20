@@ -37,7 +37,10 @@ const FILMES = [
   "You",
   "Brooklyn Nine-Nine",
   "Ratatouille",
-  "The Grand Budapest Hotel",
+  "O Grande Hotel Budapest",
+  "Tenet",
+  "Oppenheimer",
+  "Avatar",
   // adicione mais filmes e séries de vocês aqui
 ];
 
