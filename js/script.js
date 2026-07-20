@@ -577,6 +577,40 @@ function initPetScene(pets) {
     return Math.random() * (max - min) + min;
   }
 
+  // ---- Guarda onde cada bicho estava e o que estava fazendo, pra continuar
+  // exatamente dali quando a pessoa muda de página (em vez de reiniciar). ----
+  const CHAVE_ESTADO = "cantinho:pets:estado";
+  const LIMITE_SALTO_MS = 4000; // além disso, é como se tivesse "sumido" por muito tempo
+
+  function lerEstadoSalvo() {
+    try {
+      return JSON.parse(sessionStorage.getItem(CHAVE_ESTADO) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function salvarEstado(bichinhos) {
+    try {
+      const estado = {};
+      bichinhos.forEach((b) => {
+        estado[b.config.id] = {
+          x: b.x,
+          y: b.y,
+          vx: b.vx,
+          vy: b.vy,
+          facingRight: b.facingRight,
+          state: b.state,
+          remainingMs: b.phaseUntil ? b.phaseUntil - performance.now() : null,
+          savedAt: Date.now(),
+        };
+      });
+      sessionStorage.setItem(CHAVE_ESTADO, JSON.stringify(estado));
+    } catch {
+      // sessionStorage bloqueado (modo privado etc.) — só não persiste
+    }
+  }
+
   let layer = document.querySelector(".pet-layer");
   if (!layer) {
     layer = document.createElement("div");
@@ -585,7 +619,7 @@ function initPetScene(pets) {
   }
 
   class Bichinho {
-    constructor(config) {
+    constructor(config, estadoSalvo) {
       this.config = config;
       this.dragging = false;
 
@@ -601,9 +635,47 @@ function initPetScene(pets) {
       this.el.addEventListener("pointerup", (e) => this.onPointerUp(e));
       this.el.addEventListener("pointercancel", (e) => this.onPointerUp(e));
 
-      // posição inicial em qualquer lugar da tela
-      this.x = rand(MARGIN, Math.max(MARGIN, window.innerWidth - 120));
-      this.y = rand(MARGIN, Math.max(MARGIN, window.innerHeight - DISPLAY_HEIGHT - MARGIN));
+      const maxXInicial = Math.max(MARGIN, window.innerWidth - 120);
+      const maxYInicial = Math.max(MARGIN, window.innerHeight - DISPLAY_HEIGHT - MARGIN);
+
+      if (estadoSalvo) {
+        // retoma de onde parou na página anterior
+        const elapsedMs = Math.min(Date.now() - estadoSalvo.savedAt, LIMITE_SALTO_MS);
+        this.x = Math.min(Math.max(estadoSalvo.x, MARGIN), maxXInicial);
+        this.y = Math.min(Math.max(estadoSalvo.y, MARGIN), maxYInicial);
+        this.vx = estadoSalvo.vx;
+        this.vy = estadoSalvo.vy;
+        this.facingRight = estadoSalvo.facingRight;
+
+        if (!reduzMovimento && estadoSalvo.state === "andando") {
+          // avança a posição pelo tempo que passou navegando entre as páginas
+          this.x += this.vx * (elapsedMs / 1000);
+          this.y += this.vy * (elapsedMs / 1000);
+          this.x = Math.min(Math.max(this.x, MARGIN), maxXInicial);
+          this.y = Math.min(Math.max(this.y, MARGIN), maxYInicial);
+        }
+
+        const restante = (estadoSalvo.remainingMs || 0) - (reduzMovimento ? 0 : elapsedMs);
+        if (restante > 0 && this.config.states[estadoSalvo.state]) {
+          this.phaseUntil = performance.now() + restante;
+          this.applyState(estadoSalvo.state);
+        } else if (estadoSalvo.state === "andando") {
+          this.startResting();
+        } else {
+          this.startWalking();
+        }
+
+        this.el.style.transform = this.facingRight ? "scaleX(-1)" : "scaleX(1)";
+        this.el.style.left = this.x + "px";
+        this.el.style.top = this.y + "px";
+        this.lastTs = performance.now();
+        requestAnimationFrame((ts) => this.tick(ts));
+        return;
+      }
+
+      // posição inicial em qualquer lugar da tela (primeira visita)
+      this.x = rand(MARGIN, maxXInicial);
+      this.y = rand(MARGIN, maxYInicial);
       this.vx = 0;
       this.vy = 0;
       this.facingRight = Math.random() < 0.5;
@@ -750,7 +822,14 @@ function initPetScene(pets) {
     }
   }
 
-  pets.forEach((petConfig) => {
-    new Bichinho(petConfig);
+  const estadoSalvo = lerEstadoSalvo();
+  const bichinhos = pets.map((petConfig) => new Bichinho(petConfig, estadoSalvo[petConfig.id] || null));
+
+  // salva o estado ao trocar de página (ou minimizar/fechar a aba), pra
+  // continuar exatamente dali na próxima página
+  const salvarAgora = () => salvarEstado(bichinhos);
+  window.addEventListener("pagehide", salvarAgora);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") salvarAgora();
   });
 }
