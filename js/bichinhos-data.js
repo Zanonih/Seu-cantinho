@@ -68,7 +68,15 @@ const BICHINHOS_GALERIA = {
   josh: {
     nome: "Josh",
     capa: "img/bichinhos/josh.jpg",
-    fotos: ["img/bichinhos/josh-1.jpg", "img/bichinhos/josh-2.jpg", "img/bichinhos/josh-3.jpg"],
+    fotos: [
+      "img/bichinhos/josh-1.jpg",
+      "img/bichinhos/josh-2.jpg",
+      "img/bichinhos/josh-3.jpg",
+      "img/bichinhos/josh-4.jpg",
+      "img/bichinhos/josh-5.jpg",
+      "img/bichinhos/josh-6.jpg",
+      "img/bichinhos/josh-7.jpg",
+    ],
   },
   vitoria: {
     nome: "Vitória",
