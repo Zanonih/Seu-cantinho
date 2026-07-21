@@ -95,15 +95,12 @@ const BICHINHOS_GALERIA = {
   },
   sansara: {
     nome: "Samsara",
-    capa: "img/bichinhos/sansara.jpg",
+    capa: "img/bichinhos/samsara.jpg",
     fotos: [
-      "img/bichinhos/sansara-1.jpg",
-      "img/bichinhos/sansara-2.jpg",
-      "img/bichinhos/sansara-3.jpg",
-      "img/bichinhos/sansara-4.jpg",
-      "img/bichinhos/sansara-5.jpg",
-      "img/bichinhos/sansara-6.jpg",
-      "img/bichinhos/sansara-7.jpg",
+      "img/bichinhos/samsara-1.jpg",
+      "img/bichinhos/samsara-2.jpg",
+      "img/bichinhos/samsara-3.jpg",
+      "img/bichinhos/samsara-4.jpg",
     ],
   },
   hadox: {
