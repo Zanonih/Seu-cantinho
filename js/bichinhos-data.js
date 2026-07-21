@@ -132,3 +132,4 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/pichula-7.jpg",
     ],
   },
+};
