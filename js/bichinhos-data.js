@@ -39,6 +39,7 @@ const BICHINHOS_GALERIA = {
     nome: "Negão",
     capa: "img/bichinhos/negao.jpg",
     fotos: [
+      "img/bichinhos/negao.jpg",
       "img/bichinhos/negao-1.jpg",
       "img/bichinhos/negao-2.jpg",
       "img/bichinhos/negao-3.jpg",
@@ -53,7 +54,18 @@ const BICHINHOS_GALERIA = {
   pingo: {
     nome: "Pingo",
     capa: "img/bichinhos/pingo.jpg",
-    fotos: ["img/bichinhos/pingo-1.jpg", "img/bichinhos/pingo-2.jpg", "img/bichinhos/pingo-3.jpg"],
+    fotos: [
+      "img/bichinhos/pingo.jpg",
+      "img/bichinhos/pingo-1.jpg",
+      "img/bichinhos/pingo-2.jpg",
+      "img/bichinhos/pingo-3.jpg",
+      "img/bichinhos/pingo-4.jpg",
+      "img/bichinhos/pingo-5.jpg",
+      "img/bichinhos/pingo-6.jpg",
+      "img/bichinhos/pingo-7.jpg",
+      "img/bichinhos/pingo-8.jpg",
+      "img/bichinhos/pingo-9.jpg",
+    ],
   },
   josh: {
     nome: "Josh",
