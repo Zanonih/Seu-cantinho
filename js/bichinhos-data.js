@@ -111,9 +111,6 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/hadox-2.jpg",
       "img/bichinhos/hadox-3.jpg",
       "img/bichinhos/hadox-4.jpg",
-      "img/bichinhos/hadox-5.jpg",
-      "img/bichinhos/hadox-6.jpg",
-      "img/bichinhos/hadox-7.jpg",
     ],
   },
   pichula: {
