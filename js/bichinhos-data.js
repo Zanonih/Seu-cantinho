@@ -89,6 +89,8 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/vitoria-5.jpg",
       "img/bichinhos/vitoria-6.jpg",
       "img/bichinhos/vitoria-7.jpg",
+      "img/bichinhos/vitoria-8.jpg",
+      "img/bichinhos/vitoria-9.jpg",
     ],
   },
   sansara: {
