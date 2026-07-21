@@ -39,7 +39,6 @@ const BICHINHOS_GALERIA = {
     nome: "Negão",
     capa: "img/bichinhos/negao.jpg",
     fotos: [
-      "img/bichinhos/negao.jpg",
       "img/bichinhos/negao-1.jpg",
       "img/bichinhos/negao-2.jpg",
       "img/bichinhos/negao-3.jpg",
