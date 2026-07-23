@@ -48,6 +48,9 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/negao-7.jpg",
       "img/bichinhos/negao-8.jpg",
       "img/bichinhos/negao-9.jpg",
+      "img/bichinhos/negao-10.jpg",
+      "img/bichinhos/negao-11.jpg",
+      "img/bichinhos/negao-12.jpg",
     ],
   },
   pingo: {
