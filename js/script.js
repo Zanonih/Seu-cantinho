@@ -92,9 +92,11 @@ const DESEJOS = [
   "Dar a volta na pampulha de bicicleta",
   "Ir em um jogo de futebol",
   "Ir no CEU da UFMG",
+  "Ir em uma pista de patins",
+  "Ir na Rage Room",
   "Começar a guardar dinheiro juntos",
-  "Patinar em uma pista",
-  "Rage Room",
+  "Viajar juntos pra fora do país",
+  "Morar com meu amor",
   // adicione mais desejos aqui
 ];
 
