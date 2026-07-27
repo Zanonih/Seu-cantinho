@@ -70,24 +70,31 @@ const RECEITAS = [
   "Steak bites",
   "Ratatouille",
   "Berinjela a parmegiana",
+  "Croissant",
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
 // Pra adicionar mais, é só colar um novo texto entre aspas e vírgula.
 // O que já foi marcado fica salvo no navegador de quem marcou.
 const DESEJOS = [
-  "Viajar pra praia juntos",
-  "Fazer uma trilha ao ar livre",
-  "Ir a um show de uma banda que a gente ama",
+  "Viajar pro ES",
+  "Fazer uma trilha",
+  "Ir a um show do Scatolove",
   "Aprender uma receita nova juntos",
-  "Maratonar uma série nova do início ao fim",
-  "Tirar uma foto polaroid pra colar no álbum",
+  "Maratonar uma série do início ao fim",
+  "Montar um álbum de polaroid",
   "Fazer um piquenique",
   "Visitar um lugar novo na cidade",
   "Acampar uma noite",
   "Assistir o pôr do sol num lugar bonito",
-  "Cozinhar juntos pra amigos",
-  "Dar um rolê só pra tirar foto boba",
+  "Fazer uma viagem de carro",
+  "Sair só pra tirar foto boba",
+  "Dar a volta na pampulha de bicicleta",
+  "Ir em um jogo de futebol",
+  "Ir no CEU da UFMG",
+  "Começar a guardar dinheiro juntos",
+  "Patinar em uma pista",
+  "Rage Room",
   // adicione mais desejos aqui
 ];
 
