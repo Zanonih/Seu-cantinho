@@ -592,8 +592,11 @@ function initWishlist(listId, items, storageKey) {
 // ---- Cápsula do tempo (fica lacrada até a data marcada) ----
 function initTimeCapsule(dataAberturaISO) {
   const dataAbertura = new Date(dataAberturaISO);
+  const wrap = document.getElementById("capsula-wrap");
   const lacrada = document.getElementById("capsula-lacrada");
   const aberta = document.getElementById("capsula-aberta");
+  const countdown = lacrada ? lacrada.querySelector(".capsula-countdown") : null;
+  const seloLacrado = lacrada ? lacrada.querySelector(".wax-seal") : null;
   const contagem = {
     dias: document.getElementById("cap-dias"),
     horas: document.getElementById("cap-horas"),
@@ -602,9 +605,51 @@ function initTimeCapsule(dataAberturaISO) {
   };
   if (!lacrada || !aberta) return;
 
+  const reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let abrindo = false;
+
+  // ---- Explosão de brilhinhos no instante em que a cápsula abre ----
+  function criarBrilhos() {
+    if (!wrap) return;
+    const emojis = ["✨", "💛", "✨", "💫", "✨"];
+    const total = 14;
+    for (let i = 0; i < total; i++) {
+      const spark = document.createElement("span");
+      spark.className = "capsula-spark";
+      spark.textContent = emojis[i % emojis.length];
+      const angulo = (Math.PI * 2 * i) / total + Math.random() * 0.4;
+      const distancia = 70 + Math.random() * 60;
+      spark.style.setProperty("--dx", `${Math.cos(angulo) * distancia}px`);
+      spark.style.setProperty("--dy", `${Math.sin(angulo) * distancia}px`);
+      spark.style.setProperty("--dur", `${0.7 + Math.random() * 0.5}s`);
+      wrap.appendChild(spark);
+      spark.addEventListener("animationend", () => spark.remove());
+    }
+  }
+
   function mostrarAberta() {
-    lacrada.hidden = true;
-    aberta.hidden = false;
+    if (abrindo) return;
+    abrindo = true;
+
+    if (reduzMovimento) {
+      lacrada.hidden = true;
+      aberta.hidden = false;
+      aberta.classList.add("is-visible");
+      return;
+    }
+
+    if (wrap) wrap.classList.add("is-opening");
+    if (countdown) countdown.classList.remove("is-imminent");
+    if (seloLacrado) seloLacrado.classList.remove("is-imminent");
+    criarBrilhos();
+
+    setTimeout(() => {
+      lacrada.hidden = true;
+      aberta.hidden = false;
+      // força reflow antes de ativar a transição de entrada
+      void aberta.offsetWidth;
+      aberta.classList.add("is-visible");
+    }, 650);
   }
 
   function atualizar() {
@@ -626,6 +671,11 @@ function initTimeCapsule(dataAberturaISO) {
     if (contagem.horas) contagem.horas.textContent = String(horas).padStart(2, "0");
     if (contagem.minutos) contagem.minutos.textContent = String(minutos).padStart(2, "0");
     if (contagem.segundos) contagem.segundos.textContent = String(segundos).padStart(2, "0");
+
+    // ---- Últimos 10 segundos: contagem regressiva especial ----
+    const imminente = !reduzMovimento && diffMs <= 10000;
+    if (countdown) countdown.classList.toggle("is-imminent", imminente);
+    if (seloLacrado) seloLacrado.classList.toggle("is-imminent", imminente);
   }
 
   atualizar();
