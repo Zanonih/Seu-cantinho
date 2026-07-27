@@ -79,6 +79,7 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/josh-5.jpg",
       "img/bichinhos/josh-6.jpg",
       "img/bichinhos/josh-7.jpg",
+      "img/bichinhos/josh-8.jpg",
     ],
   },
   vitoria: {
@@ -127,6 +128,7 @@ const BICHINHOS_GALERIA = {
       "img/bichinhos/pichula-5.jpg",
       "img/bichinhos/pichula-6.jpg",
       "img/bichinhos/pichula-7.jpg",
+      "img/bichinhos/pichula-8.jpg",
     ],
   },
 };
