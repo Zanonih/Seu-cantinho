@@ -719,6 +719,26 @@ h2.section-title {
   transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
 }
 
+.letter-greeting {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  color: var(--wine);
+  text-align: center;
+  margin: 0 0 1.1rem;
+}
+
+.letter-signature {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--wine);
+  text-align: right;
+  margin: 1.5rem 0 0;
+}
+
 .letter-content.is-visible {
   opacity: 1;
   transform: translateY(0);
