@@ -693,14 +693,35 @@ function initLetterSeal() {
 
   const reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function abrirCarta() {
+  // ---- Lembra que a carta já foi aberta durante essa "visita" ao site,
+  // pra não fechar de novo só por trocar de aba e voltar. Só reseta se a
+  // aba/navegador for fechado e o site for aberto de novo depois. ----
+  const CHAVE_CARTA = "cantinho:carta:aberta";
+
+  function salvarCartaAberta() {
+    try {
+      sessionStorage.setItem(CHAVE_CARTA, "1");
+    } catch {
+      // sessionStorage bloqueado (modo privado etc.) — só não persiste
+    }
+  }
+
+  function cartaJaFoiAberta() {
+    try {
+      return sessionStorage.getItem(CHAVE_CARTA) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function abrirCarta({ animar = true } = {}) {
     button.setAttribute("aria-expanded", "true");
     button.disabled = true;
 
     letter.setAttribute("aria-hidden", "false");
     if (cta) cta.removeAttribute("tabindex");
 
-    if (reduzMovimento) {
+    if (!animar || reduzMovimento) {
       overlay.style.display = "none";
       letter.classList.add("is-visible");
       return;
@@ -717,7 +738,16 @@ function initLetterSeal() {
     setTimeout(() => { overlay.style.display = "none"; }, 1300);
   }
 
-  button.addEventListener("click", abrirCarta);
+  // Se a carta já tinha sido aberta nessa visita (ex: trocou de aba e voltou),
+  // reabre direto sem animação nem selo.
+  if (cartaJaFoiAberta()) {
+    abrirCarta({ animar: false });
+  }
+
+  button.addEventListener("click", () => {
+    salvarCartaAberta();
+    abrirCarta();
+  });
 }
 
 // ---- Bichinhos animados (pixel art andando / sentando / deitando) ----
