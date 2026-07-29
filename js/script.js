@@ -1031,3 +1031,99 @@ function initPetScene(pets) {
     if (document.visibilityState === "hidden") salvarAgora();
   });
 }
+
+// ---- Música de fundo (site inteiro), usando um vídeo do YouTube só como
+// áudio (o player fica escondido, só o botãozinho de mutar aparece) ----
+function initBackgroundMusic(videoId) {
+  const CHAVE_MUTE = "cantinho:musica:muted";
+  const container = document.getElementById("bgm-yt");
+  const botao = document.getElementById("bgm-toggle");
+  if (!container || !videoId) return;
+
+  // Preferência guardada: por padrão começa mutado (autoplay com som é
+  // bloqueado pelos navegadores), a pessoa decide se quer ativar o som.
+  function lerPreferenciaMutado() {
+    try {
+      const salvo = localStorage.getItem(CHAVE_MUTE);
+      return salvo === null ? true : salvo === "1";
+    } catch {
+      return true;
+    }
+  }
+
+  function salvarPreferenciaMutado(mutado) {
+    try {
+      localStorage.setItem(CHAVE_MUTE, mutado ? "1" : "0");
+    } catch {
+      // localStorage bloqueado (modo privado etc.) — só não persiste
+    }
+  }
+
+  let player = null;
+  let mutado = lerPreferenciaMutado();
+
+  function atualizarIcone() {
+    if (!botao) return;
+    botao.textContent = mutado ? "🔇" : "🔊";
+    botao.setAttribute("aria-pressed", String(!mutado));
+    botao.setAttribute("aria-label", mutado ? "Ativar música de fundo" : "Silenciar música de fundo");
+  }
+
+  atualizarIcone();
+
+  function aoApiPronta() {
+    player = new YT.Player(container, {
+      videoId,
+      playerVars: {
+        autoplay: 1,
+        mute: 1, // sempre começa mutado — é a única forma confiável de autoplay funcionar
+        loop: 1,
+        playlist: videoId, // necessário pro loop funcionar num vídeo único
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        rel: 0,
+      },
+      events: {
+        onReady: (e) => {
+          if (!mutado) {
+            // tenta desmutar automaticamente se a pessoa já tinha escolhido
+            // ouvir com som antes; alguns navegadores podem bloquear isso
+            // mesmo assim, aí ela ajusta com o botão.
+            e.target.unMute();
+          }
+          e.target.playVideo();
+        },
+      },
+    });
+  }
+
+  if (window.YT && window.YT.Player) {
+    aoApiPronta();
+  } else {
+    window.onYouTubeIframeAPIReady = aoApiPronta;
+    if (!document.getElementById("youtube-iframe-api")) {
+      const script = document.createElement("script");
+      script.id = "youtube-iframe-api";
+      script.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(script);
+    }
+  }
+
+  if (botao) {
+    botao.addEventListener("click", () => {
+      if (!player || typeof player.isMuted !== "function") return;
+      mutado = !mutado;
+      if (mutado) {
+        player.mute();
+      } else {
+        player.unMute();
+        player.playVideo();
+      }
+      salvarPreferenciaMutado(mutado);
+      atualizarIcone();
+    });
+  }
+}

@@ -1277,3 +1277,45 @@ h2.section-title {
 @media (max-width: 560px) {
   .pet-lightbox-nav { width: 38px; height: 38px; font-size: 1.3rem; }
 }
+
+/* -------- Música de fundo (player escondido + botão de mutar) -------- */
+
+.bgm-yt {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  bottom: 0;
+  left: 0;
+}
+
+.bgm-toggle {
+  position: fixed;
+  bottom: 1.1rem;
+  right: 1.1rem;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--wine);
+  color: var(--cream);
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bgm-toggle:hover { transform: scale(1.08); }
+
+.bgm-toggle:active { transform: scale(0.96); }
+
+@media (max-width: 560px) {
+  .bgm-toggle { width: 40px; height: 40px; font-size: 1.05rem; bottom: 0.8rem; right: 0.8rem; }
+}
