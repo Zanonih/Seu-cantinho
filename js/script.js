@@ -1034,7 +1034,7 @@ function initPetScene(pets) {
 
 
 // ---- Música de fundo (site inteiro), usando um arquivo de áudio local ----
-function initBackgroundMusic(startSeconds = 0, volume = 0.4) {
+function initBackgroundMusic(startSeconds = 0, volume = 0.1) {
   const CHAVE_TOCANDO = "cantinho:musica:tocando";
   const CHAVE_POSICAO = "cantinho:musica:posicao";
   const audio = document.getElementById("bgm-audio");
