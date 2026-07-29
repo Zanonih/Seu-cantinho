@@ -1034,7 +1034,7 @@ function initPetScene(pets) {
 
 
 // ---- Música de fundo (site inteiro), usando um arquivo de áudio local ----
-function initBackgroundMusic(startSeconds = 0, volume = 0.1) {
+function initBackgroundMusic(startSeconds = 0, volume = 0.4) {
   const CHAVE_TOCANDO = "cantinho:musica:tocando";
   const CHAVE_POSICAO = "cantinho:musica:posicao";
   const audio = document.getElementById("bgm-audio");
@@ -1136,4 +1136,68 @@ function initBackgroundMusic(startSeconds = 0, volume = 0.1) {
   } else {
     tocar();
   }
+}
+
+// ---- Tela de senha pra entrar no site (uma perguntinha fofa, não é
+// segurança de verdade, é só um charminho) ----
+function initSiteLock(respostaCorreta) {
+  const CHAVE = "cantinho:desbloqueado";
+  const overlay = document.getElementById("site-lock");
+  const form = document.getElementById("site-lock-form");
+  const input = document.getElementById("site-lock-input");
+  const erro = document.getElementById("site-lock-erro");
+  const card = overlay ? overlay.querySelector(".site-lock-card") : null;
+  if (!overlay || !form || !input) return;
+
+  function normalizar(txt) {
+    return txt
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function jaDesbloqueado() {
+    try {
+      return sessionStorage.getItem(CHAVE) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function desbloquear() {
+    try {
+      sessionStorage.setItem(CHAVE, "1");
+    } catch {
+      // sessionStorage bloqueado (modo privado etc.) — só vai perguntar de novo
+    }
+    overlay.classList.add("is-unlocked");
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 500);
+  }
+
+  if (jaDesbloqueado()) {
+    overlay.style.display = "none";
+    return;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (normalizar(input.value) === normalizar(respostaCorreta)) {
+      desbloquear();
+    } else {
+      if (erro) erro.hidden = false;
+      if (card) {
+        card.classList.remove("is-shaking");
+        // força reflow pra animação poder rodar de novo em erros seguidos
+        void card.offsetWidth;
+        card.classList.add("is-shaking");
+      }
+      input.value = "";
+      input.focus();
+    }
+  });
+
+  input.focus();
 }
