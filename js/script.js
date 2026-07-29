@@ -1032,16 +1032,16 @@ function initPetScene(pets) {
   });
 }
 
-// ---- Música de fundo (site inteiro), usando um vídeo do YouTube só como
+// ---- Música de fundo (site inteiro), usando uma faixa do Spotify só como
 // áudio (o player fica escondido, só o botãozinho de mutar aparece) ----
-function initBackgroundMusic(videoId) {
+function initBackgroundMusic(spotifyTrackId, startSeconds = 0) {
   const CHAVE_MUTE = "cantinho:musica:muted";
   const container = document.getElementById("bgm-yt");
   const botao = document.getElementById("bgm-toggle");
-  if (!container || !videoId) return;
+  if (!container || !spotifyTrackId) return;
 
-  // Preferência guardada: por padrão começa mutado (autoplay com som é
-  // bloqueado pelos navegadores), a pessoa decide se quer ativar o som.
+  // Preferência guardada: por padrão começa "mutado" (pausado) — autoplay
+  // com som é bloqueado pelos navegadores, a pessoa decide se quer tocar.
   function lerPreferenciaMutado() {
     try {
       const salvo = localStorage.getItem(CHAVE_MUTE);
@@ -1059,8 +1059,9 @@ function initBackgroundMusic(videoId) {
     }
   }
 
-  let player = null;
+  let controller = null;
   let mutado = lerPreferenciaMutado();
+  let jaBuscouPosicaoInicial = false;
 
   function atualizarIcone() {
     if (!botao) return;
@@ -1071,76 +1072,63 @@ function initBackgroundMusic(videoId) {
 
   atualizarIcone();
 
-  function aoApiPronta() {
-    console.log("[música] API do YouTube pronta, criando player...");
-    player = new YT.Player(container, {
-      videoId,
-      playerVars: {
-        autoplay: 1,
-        mute: 1, // sempre começa mutado — é a única forma confiável de autoplay funcionar
-        loop: 1,
-        playlist: videoId, // necessário pro loop funcionar num vídeo único
-        controls: 0,
-        disablekb: 1,
-        fs: 0,
-        modestbranding: 1,
-        playsinline: 1,
-        rel: 0,
-      },
-      events: {
-        onReady: (e) => {
-          console.log("[música] player pronto (onReady)");
-          if (!mutado) {
-            // tenta desmutar automaticamente se a pessoa já tinha escolhido
-            // ouvir com som antes; alguns navegadores podem bloquear isso
-            // mesmo assim, aí ela ajusta com o botão.
-            e.target.unMute();
-          }
-          e.target.playVideo();
-        },
-        onError: (e) => {
-          const codigos = {
-            2: "parâmetro inválido (ID do vídeo errado?)",
-            5: "erro do player HTML5",
-            100: "vídeo não encontrado, removido ou privado",
-            101: "o dono do vídeo desativou a incorporação (embed) em outros sites",
-            150: "o dono do vídeo desativou a incorporação (embed) em outros sites",
-          };
-          console.error("[música] erro no player do YouTube. Código:", e.data, "-", codigos[e.data] || "desconhecido");
-        },
-      },
+  console.log("[música] iniciando Spotify com track:", spotifyTrackId, "a partir de", startSeconds, "s");
+
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    console.log("[música] API do Spotify pronta, criando controller...");
+    const options = {
+      uri: `spotify:track:${spotifyTrackId}`,
+      width: "1",
+      height: "1",
+    };
+
+    IFrameAPI.createController(container, options, (EmbedController) => {
+      controller = EmbedController;
+
+      controller.addListener("ready", () => {
+        console.log("[música] player do Spotify pronto (ready)");
+        if (!mutado) {
+          controller.play();
+        }
+      });
+
+      // assim que a reprodução realmente começar, pula pro segundo desejado
+      // (só na primeira vez, senão ficaria voltando toda hora)
+      controller.addListener("playback_update", (e) => {
+        if (!jaBuscouPosicaoInicial && e && e.data && e.data.isPaused === false) {
+          jaBuscouPosicaoInicial = true;
+          if (startSeconds > 0) controller.seek(startSeconds);
+        }
+      });
     });
-  }
+  };
 
-  console.log("[música] iniciando initBackgroundMusic com videoId:", videoId);
-
-  if (window.YT && window.YT.Player) {
-    aoApiPronta();
-  } else {
-    window.onYouTubeIframeAPIReady = aoApiPronta;
-    if (!document.getElementById("youtube-iframe-api")) {
-      const script = document.createElement("script");
-      script.id = "youtube-iframe-api";
-      script.src = "https://www.youtube.com/iframe_api";
-      script.onerror = () => console.error("[música] falha ao CARREGAR o script da API do YouTube (bloqueado por extensão/adblock/rede?)");
-      document.head.appendChild(script);
-      console.log("[música] script da API do YouTube adicionado, aguardando carregar...");
-    }
+  if (!document.getElementById("spotify-iframe-api")) {
+    const script = document.createElement("script");
+    script.id = "spotify-iframe-api";
+    script.src = "https://open.spotify.com/embed/iframe-api/v1";
+    script.async = true;
+    script.onerror = () => console.error("[música] falha ao CARREGAR o script da API do Spotify (bloqueado por extensão/adblock/rede?)");
+    document.body.appendChild(script);
+    console.log("[música] script da API do Spotify adicionado, aguardando carregar...");
   }
 
   if (botao) {
     botao.addEventListener("click", () => {
-      console.log("[música] botão clicado. player existe?", !!player, "typeof isMuted:", player && typeof player.isMuted);
-      if (!player || typeof player.isMuted !== "function") {
+      console.log("[música] botão clicado. controller existe?", !!controller);
+      if (!controller) {
         console.warn("[música] player ainda não está pronto — clique não teve efeito.");
         return;
       }
       mutado = !mutado;
       if (mutado) {
-        player.mute();
+        controller.pause();
       } else {
-        player.unMute();
-        player.playVideo();
+        controller.play();
+        if (!jaBuscouPosicaoInicial) {
+          jaBuscouPosicaoInicial = true;
+          if (startSeconds > 0) setTimeout(() => controller.seek(startSeconds), 400);
+        }
       }
       salvarPreferenciaMutado(mutado);
       atualizarIcone();
