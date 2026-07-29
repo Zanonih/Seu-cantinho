@@ -1032,106 +1032,61 @@ function initPetScene(pets) {
   });
 }
 
-// ---- Música de fundo (site inteiro), usando uma faixa do Spotify só como
-// áudio (o player fica escondido, só o botãozinho de mutar aparece) ----
-function initBackgroundMusic(spotifyTrackId, startSeconds = 0) {
-  const CHAVE_MUTE = "cantinho:musica:muted";
-  const container = document.getElementById("bgm-yt");
-  const botao = document.getElementById("bgm-toggle");
-  if (!container || !spotifyTrackId) return;
 
-  // Preferência guardada: por padrão começa "mutado" (pausado) — autoplay
-  // com som é bloqueado pelos navegadores, a pessoa decide se quer tocar.
-  function lerPreferenciaMutado() {
-    try {
-      const salvo = localStorage.getItem(CHAVE_MUTE);
-      return salvo === null ? true : salvo === "1";
-    } catch {
-      return true;
-    }
+// ---- Música de fundo (site inteiro), usando um arquivo de áudio local ----
+function initBackgroundMusic(startSeconds = 0, volume = 0.4) {
+  const CHAVE_TOCANDO = "cantinho:musica:tocando";
+  const audio = document.getElementById("bgm-audio");
+  const botao = document.getElementById("bgm-toggle");
+  if (!audio || !botao) return;
+
+  audio.volume = volume;
+  let primeiraVez = true;
+
+  function atualizarIcone(tocando) {
+    botao.textContent = tocando ? "⏸️" : "▶️";
+    botao.setAttribute("aria-pressed", String(tocando));
+    botao.setAttribute("aria-label", tocando ? "Pausar música de fundo" : "Tocar música de fundo");
   }
 
-  function salvarPreferenciaMutado(mutado) {
+  function salvarPreferenciaTocando(tocando) {
     try {
-      localStorage.setItem(CHAVE_MUTE, mutado ? "1" : "0");
+      localStorage.setItem(CHAVE_TOCANDO, tocando ? "1" : "0");
     } catch {
       // localStorage bloqueado (modo privado etc.) — só não persiste
     }
   }
 
-  let controller = null;
-  let mutado = lerPreferenciaMutado();
-  let jaBuscouPosicaoInicial = false;
-
-  function atualizarIcone() {
-    if (!botao) return;
-    botao.textContent = mutado ? "▶️" : "⏸️";
-    botao.setAttribute("aria-pressed", String(!mutado));
-    botao.setAttribute("aria-label", mutado ? "Tocar música de fundo" : "Pausar música de fundo");
-  }
-
-  atualizarIcone();
-
-  console.log("[música] iniciando Spotify com track:", spotifyTrackId, "a partir de", startSeconds, "s");
-
-  window.onSpotifyIframeApiReady = (IFrameAPI) => {
-    console.log("[música] API do Spotify pronta, criando controller...");
-    const options = {
-      uri: `spotify:track:${spotifyTrackId}`,
-      width: "1",
-      height: "1",
-    };
-
-    IFrameAPI.createController(container, options, (EmbedController) => {
-      controller = EmbedController;
-
-      controller.addListener("ready", () => {
-        console.log("[música] player do Spotify pronto (ready)");
-        if (!mutado) {
-          controller.play();
-        }
+  function tocar() {
+    if (primeiraVez) {
+      primeiraVez = false;
+      if (startSeconds > 0) audio.currentTime = startSeconds;
+    }
+    audio.play()
+      .then(() => {
+        salvarPreferenciaTocando(true);
+        atualizarIcone(true);
+      })
+      .catch((err) => {
+        // navegador bloqueou autoplay com som — normal na primeira visita,
+        // a pessoa só precisa clicar no botão uma vez
+        console.warn("[música] autoplay bloqueado pelo navegador, precisa clicar no botão:", err);
+        atualizarIcone(false);
       });
-
-      // assim que a reprodução realmente começar, pula pro segundo desejado
-      // (só na primeira vez, senão ficaria voltando toda hora)
-      controller.addListener("playback_update", (e) => {
-        if (!jaBuscouPosicaoInicial && e && e.data && e.data.isPaused === false) {
-          jaBuscouPosicaoInicial = true;
-          if (startSeconds > 0) controller.seek(startSeconds);
-        }
-      });
-    });
-  };
-
-  if (!document.getElementById("spotify-iframe-api")) {
-    const script = document.createElement("script");
-    script.id = "spotify-iframe-api";
-    script.src = "https://open.spotify.com/embed/iframe-api/v1";
-    script.async = true;
-    script.onerror = () => console.error("[música] falha ao CARREGAR o script da API do Spotify (bloqueado por extensão/adblock/rede?)");
-    document.body.appendChild(script);
-    console.log("[música] script da API do Spotify adicionado, aguardando carregar...");
   }
 
-  if (botao) {
-    botao.addEventListener("click", () => {
-      console.log("[música] botão clicado. controller existe?", !!controller);
-      if (!controller) {
-        console.warn("[música] player ainda não está pronto — clique não teve efeito.");
-        return;
-      }
-      mutado = !mutado;
-      if (mutado) {
-        controller.pause();
-      } else {
-        controller.play();
-        if (!jaBuscouPosicaoInicial) {
-          jaBuscouPosicaoInicial = true;
-          if (startSeconds > 0) setTimeout(() => controller.seek(startSeconds), 400);
-        }
-      }
-      salvarPreferenciaMutado(mutado);
-      atualizarIcone();
-    });
+  function pausar() {
+    audio.pause();
+    salvarPreferenciaTocando(false);
+    atualizarIcone(false);
   }
+
+  botao.addEventListener("click", () => {
+    if (audio.paused) tocar();
+    else pausar();
+  });
+
+  // tenta tocar sozinho assim que a página carrega; se o navegador bloquear
+  // (comum na primeira visita), a pessoa clica no botão pra iniciar
+  tocar();
 }
