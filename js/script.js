@@ -1072,6 +1072,7 @@ function initBackgroundMusic(videoId) {
   atualizarIcone();
 
   function aoApiPronta() {
+    console.log("[música] API do YouTube pronta, criando player...");
     player = new YT.Player(container, {
       videoId,
       playerVars: {
@@ -1088,6 +1089,7 @@ function initBackgroundMusic(videoId) {
       },
       events: {
         onReady: (e) => {
+          console.log("[música] player pronto (onReady)");
           if (!mutado) {
             // tenta desmutar automaticamente se a pessoa já tinha escolhido
             // ouvir com som antes; alguns navegadores podem bloquear isso
@@ -1096,9 +1098,21 @@ function initBackgroundMusic(videoId) {
           }
           e.target.playVideo();
         },
+        onError: (e) => {
+          const codigos = {
+            2: "parâmetro inválido (ID do vídeo errado?)",
+            5: "erro do player HTML5",
+            100: "vídeo não encontrado, removido ou privado",
+            101: "o dono do vídeo desativou a incorporação (embed) em outros sites",
+            150: "o dono do vídeo desativou a incorporação (embed) em outros sites",
+          };
+          console.error("[música] erro no player do YouTube. Código:", e.data, "-", codigos[e.data] || "desconhecido");
+        },
       },
     });
   }
+
+  console.log("[música] iniciando initBackgroundMusic com videoId:", videoId);
 
   if (window.YT && window.YT.Player) {
     aoApiPronta();
@@ -1108,13 +1122,19 @@ function initBackgroundMusic(videoId) {
       const script = document.createElement("script");
       script.id = "youtube-iframe-api";
       script.src = "https://www.youtube.com/iframe_api";
+      script.onerror = () => console.error("[música] falha ao CARREGAR o script da API do YouTube (bloqueado por extensão/adblock/rede?)");
       document.head.appendChild(script);
+      console.log("[música] script da API do YouTube adicionado, aguardando carregar...");
     }
   }
 
   if (botao) {
     botao.addEventListener("click", () => {
-      if (!player || typeof player.isMuted !== "function") return;
+      console.log("[música] botão clicado. player existe?", !!player, "typeof isMuted:", player && typeof player.isMuted);
+      if (!player || typeof player.isMuted !== "function") {
+        console.warn("[música] player ainda não está pronto — clique não teve efeito.");
+        return;
+      }
       mutado = !mutado;
       if (mutado) {
         player.mute();
