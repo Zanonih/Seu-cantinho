@@ -13,6 +13,20 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="inicio">
+  <div id="site-lock" class="site-lock">
+    <div class="site-lock-card">
+      <img src="img/pets/maia_sentado.gif" alt="Maia, a gatinha, sentada com as patinhas na grade da janela" class="site-lock-photo">
+      <p class="site-lock-question">
+        Não fala, mas parece entender tudo. Posta-se sobre as grades, observando o universo como se buscasse alguma verdade escondida. Qual o seu nome?
+      </p>
+      <form id="site-lock-form" class="site-lock-form" autocomplete="off">
+        <input type="text" id="site-lock-input" class="site-lock-input" placeholder="Sua resposta..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button type="submit" class="site-lock-button">Entrar 💌</button>
+      </form>
+      <p id="site-lock-erro" class="site-lock-erro" hidden>Não foi essa... tenta de novo 🐾</p>
+    </div>
+  </div>
+
 
 <header class="site-header">
   <p class="site-subtitle">seu cantinho</p>
@@ -81,10 +95,13 @@
 </footer>
 
 <script src="js/script.js"></script>
+<script>
+  initSiteLock("Maia");
+</script>
 <audio id="bgm-audio" src="audio/musica-fundo.mp3" preload="auto" loop></audio>
 <button type="button" id="bgm-toggle" class="bgm-toggle" aria-pressed="false" aria-label="Tocar música de fundo">▶️</button>
 <script>
-  initBackgroundMusic(13, 0.1);
+  initBackgroundMusic(13, 0.4);
 </script>
 <script>
   initLetterSeal();
