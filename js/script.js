@@ -1034,14 +1034,15 @@ function initPetScene(pets) {
 
 
 // ---- Música de fundo (site inteiro), usando um arquivo de áudio local ----
-function initBackgroundMusic(startSeconds = 0, volume = 0.2) {
+function initBackgroundMusic(startSeconds = 0, volume = 0.4) {
   const CHAVE_TOCANDO = "cantinho:musica:tocando";
+  const CHAVE_POSICAO = "cantinho:musica:posicao";
   const audio = document.getElementById("bgm-audio");
   const botao = document.getElementById("bgm-toggle");
   if (!audio || !botao) return;
 
   audio.volume = volume;
-  let primeiraVez = true;
+  let posicaoAplicada = false;
 
   function atualizarIcone(tocando) {
     botao.textContent = tocando ? "⏸️" : "▶️";
@@ -1057,11 +1058,34 @@ function initBackgroundMusic(startSeconds = 0, volume = 0.2) {
     }
   }
 
-  function tocar() {
-    if (primeiraVez) {
-      primeiraVez = false;
-      if (startSeconds > 0) audio.currentTime = startSeconds;
+  function salvarPosicao() {
+    try {
+      localStorage.setItem(CHAVE_POSICAO, String(audio.currentTime));
+    } catch {
+      // localStorage bloqueado — só não persiste
     }
+  }
+
+  function lerPosicaoSalva() {
+    try {
+      const salvo = parseFloat(localStorage.getItem(CHAVE_POSICAO));
+      return Number.isFinite(salvo) ? salvo : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  // Aplica de onde a música parou na página anterior (ou o ponto inicial
+  // padrão, se for a primeira vez que a pessoa visita o site).
+  function aplicarPosicaoInicial() {
+    if (posicaoAplicada) return;
+    posicaoAplicada = true;
+    const salva = lerPosicaoSalva();
+    audio.currentTime = salva > 0 ? salva : startSeconds;
+  }
+
+  function tocar() {
+    aplicarPosicaoInicial();
     audio.play()
       .then(() => {
         salvarPreferenciaTocando(true);
@@ -1078,6 +1102,7 @@ function initBackgroundMusic(startSeconds = 0, volume = 0.2) {
   function pausar() {
     audio.pause();
     salvarPreferenciaTocando(false);
+    salvarPosicao();
     atualizarIcone(false);
   }
 
@@ -1086,7 +1111,29 @@ function initBackgroundMusic(startSeconds = 0, volume = 0.2) {
     else pausar();
   });
 
-  // tenta tocar sozinho assim que a página carrega; se o navegador bloquear
-  // (comum na primeira visita), a pessoa clica no botão pra iniciar
-  tocar();
+  // guarda a posição de tempos em tempos e ao trocar/fechar a aba, pra
+  // continuar exatamente dali na próxima página
+  audio.addEventListener("timeupdate", salvarPosicao);
+  window.addEventListener("pagehide", salvarPosicao);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") salvarPosicao();
+  });
+
+  // Se a pessoa tinha pausado antes, respeita isso e não toca sozinho —
+  // só prepara a posição certa pro próximo play. Caso contrário (primeira
+  // visita ou já estava tocando), tenta continuar tocando.
+  const preferenciaAnterior = (() => {
+    try {
+      return localStorage.getItem(CHAVE_TOCANDO);
+    } catch {
+      return null;
+    }
+  })();
+
+  if (preferenciaAnterior === "0") {
+    aplicarPosicaoInicial();
+    atualizarIcone(false);
+  } else {
+    tocar();
+  }
 }
