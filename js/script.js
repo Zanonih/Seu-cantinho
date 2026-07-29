@@ -1065,9 +1065,9 @@ function initBackgroundMusic(spotifyTrackId, startSeconds = 0) {
 
   function atualizarIcone() {
     if (!botao) return;
-    botao.textContent = mutado ? "🔇" : "🔊";
+    botao.textContent = mutado ? "▶️" : "⏸️";
     botao.setAttribute("aria-pressed", String(!mutado));
-    botao.setAttribute("aria-label", mutado ? "Ativar música de fundo" : "Silenciar música de fundo");
+    botao.setAttribute("aria-label", mutado ? "Tocar música de fundo" : "Pausar música de fundo");
   }
 
   atualizarIcone();
