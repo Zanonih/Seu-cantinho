@@ -148,7 +148,7 @@ function initTimeline(containerId, items) {
         ${item.data ? `<p class="timeline-date">${item.data}</p>` : ""}
         <button class="gallery-item timeline-photo" style="--tilt:${(i % 5 - 2) * 1.4}deg" data-index="${i}" aria-label="Ver foto: ${item.alt}">
           ${item.src
-            ? `<img src="${item.src}" alt="${item.alt}" loading="lazy">`
+            ? `<img src="${item.src}" alt="${item.alt}" loading="lazy" class="${item.blur ? "is-blurred" : ""}">`
             : `<span class="placeholder-label">📷<br>${item.alt}</span>`
           }
         </button>
@@ -164,6 +164,17 @@ function initTimeline(containerId, items) {
     btn.addEventListener("click", () => {
       const item = items[Number(btn.dataset.index)];
       if (!item.src) return;
+
+      // se a foto ainda está borrada, o primeiro clique só revela ela
+      // (tira o borrão); só num próximo clique é que abre em tela cheia
+      const img = btn.querySelector("img");
+      if (img && img.classList.contains("is-blurred")) {
+        img.classList.remove("is-blurred");
+        const dica = btn.querySelector(".timeline-blur-hint");
+        if (dica) dica.remove();
+        return;
+      }
+
       lightboxImg.src = item.src;
       lightboxImg.alt = item.alt;
       lightbox.classList.add("is-open");
