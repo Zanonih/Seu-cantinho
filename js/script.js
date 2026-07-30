@@ -71,6 +71,11 @@ const RECEITAS = [
   "Ratatouille",
   "Berinjela a parmegiana",
   "Croissant",
+  "Arroz à piamontese e Bife Ancho",
+  "Chicken Alfredo",
+  "Carbonara",
+  "Fazer pizza",
+  "Ravioli",
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
@@ -94,6 +99,7 @@ const DESEJOS = [
   "Ir no CEU da UFMG",
   "Ir em uma pista de patins",
   "Ir na Rage Room",
+  "Usar um pacote de sal juntos",
   "Começar a guardar dinheiro juntos",
   "Viajar juntos pra fora do país",
   "Morar com meu amor",
