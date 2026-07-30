@@ -611,27 +611,31 @@ h2.section-title {
 
 /* -------- Álbum em linha do tempo -------- */
 
-.timeline {
-  position: relative;
-  margin-top: 2.4rem;
-  padding: 0.5rem 1rem 0.5rem 0.5rem;
-  max-height: 65vh;
+.timeline-scroll {
+  max-height: 80vh;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--rose-deep) transparent;
+  padding-right: 0.6rem;
 }
 
-.timeline::-webkit-scrollbar {
+.timeline-scroll::-webkit-scrollbar {
   width: 8px;
 }
 
-.timeline::-webkit-scrollbar-track {
+.timeline-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.timeline::-webkit-scrollbar-thumb {
+.timeline-scroll::-webkit-scrollbar-thumb {
   background-color: var(--rose-deep);
   border-radius: 999px;
+}
+
+.timeline {
+  position: relative;
+  margin-top: 2.4rem;
+  padding: 0.5rem 0 0.5rem;
 }
 
 .timeline::before {
