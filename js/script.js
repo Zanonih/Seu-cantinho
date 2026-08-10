@@ -76,6 +76,7 @@ const RECEITAS = [
   "Carbonara",
   "Fazer pizza",
   "Ravioli",
+  "Jantinha padrão (arroz feijão batata frita e carne de boi)",
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
@@ -93,12 +94,13 @@ const DESEJOS = [
   "Acampar uma noite",
   "Assistir o pôr do sol num lugar bonito",
   "Fazer uma viagem de carro",
-  "Sair só pra tirar foto boba",
+  "Sair pra passear sem destino fixo",
   "Dar a volta na pampulha de bicicleta",
   "Ir em um jogo de futebol",
   "Ir no CEU da UFMG",
   "Ir em uma pista de patins",
   "Ir na Rage Room",
+  "Se hospedar na Marília de novo"
   "Usar um pacote de sal juntos",
   "Começar a guardar dinheiro juntos",
   "Viajar juntos pra fora do país",
