@@ -102,7 +102,7 @@ const DESEJOS = [
   "Ir no CEU da UFMG",
   "Ir em uma pista de patins",
   "Ir na Rage Room",
-  "Se hospedar na Marília de novo"
+  "Se hospedar na Marília de novo",
   "Usar um pacote de sal juntos",
   "Começar a guardar dinheiro juntos",
   "Viajar juntos pra fora do país",
