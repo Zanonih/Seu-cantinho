@@ -77,6 +77,8 @@ const RECEITAS = [
   "Fazer pizza",
   "Ravioli",
   "Jantinha padrão (arroz feijão batata frita e carne de boi)",
+  "Katsu Karê",
+  "Purê de batata com demiglace",
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
