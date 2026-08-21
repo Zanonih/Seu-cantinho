@@ -3,16 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Aplica o tema (claro/escuro) o mais cedo possível, antes da página
+  // pintar na tela, pra não dar aquele "flash" da cor errada.
+  document.documentElement.classList.add("js");
+  try {
+    var temaSalvo = localStorage.getItem("cantinho:tema");
+    if (temaSalvo === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) { /* localStorage bloqueado — só usa o tema padrão */ }
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
 <link rel="icon" href="img/favicon/favicon.ico">
-<title>Assistir · Para Você</title>
+<title>Conquistas · Para Você</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="filmes">
+<body data-page="conquistas">
 
 <header class="site-header">
   <p class="site-subtitle">seu cantinho</p>
@@ -37,6 +46,7 @@
       <li><a href="filmes.html" data-page="filmes"><span class="icon">🎬</span>Assistir</a></li>
       <li><a href="receitas.html" data-page="receitas"><span class="icon">🍳</span>Receitas</a></li>
       <li><a href="desejos.html" data-page="desejos"><span class="icon">✨</span>Desejos</a></li>
+      <li><a href="conquistas.html" data-page="conquistas"><span class="icon">🏆</span>Conquistas</a></li>
       <li><a href="capsula.html" data-page="capsula"><span class="icon">🔒</span>Cápsula</a></li>
     </ul>
   </nav>
@@ -44,28 +54,17 @@
 
 <main>
   <section class="card" style="text-align:center;">
-    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🎬</div>
-    <h2 class="section-title" style="margin-top:1rem;">O que Assistir?</h2>
+    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🏆</div>
+    <h2 class="section-title" style="margin-top:1rem;">Conquistas do casal</h2>
+    <p class="lede" style="margin:0 auto;">Cada sonho realizado vira uma medalha na nossa coleção.</p>
 
-    <div class="draw-stage">
-      <div class="slot-machine">
-        <div class="slot-lights" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="reel-window" id="filme-reel-window">
-          <div class="reel-marker" aria-hidden="true"></div>
-          <div class="reel-list" id="filme-reel-list">
-            <div class="reel-item">?</div>
-          </div>
-        </div>
-      </div>
-      <div class="draw-actions">
-        <button class="btn" id="filme-sortear">Sortear 🎞️</button>
-        <button class="btn btn-ghost" id="filme-reset">Recomeçar ↺</button>
-      </div>
-      <p class="draw-note" id="filme-draw-note">clique quantas vezes quiser</p>
-      <ul class="draw-pool" id="filme-pool-list" aria-label="Lista de filmes"></ul>
-    </div>
+    <p class="conquistas-resumo" id="conquistas-resumo"></p>
+    <div class="conquistas-grid" id="conquistas-grid"></div>
+
+    <p class="wishlist-contador" style="margin-top:1.8rem;">
+      Quer marcar um sonho novo como realizado? É lá na página de
+      <a href="desejos.html" style="text-decoration:underline; color:var(--wine);">Desejos</a>.
+    </p>
   </section>
 </main>
 
@@ -79,23 +78,16 @@
 <script src="js/script.js"></script>
 <audio id="bgm-audio" src="audio/musica-fundo.mp3" preload="auto" loop></audio>
 <button type="button" id="bgm-toggle" class="bgm-toggle" aria-pressed="false" aria-label="Tocar música de fundo">▶️</button>
+<button type="button" id="theme-toggle" class="theme-toggle">🌙</button>
 <script>
   initBackgroundMusic(13, 0.4);
 </script>
 <script>
-  initLoveCounter("2025-06-19T23:35:00");
+  initThemeToggle();
 </script>
 <script>
-  initReel({
-    buttonId: "filme-sortear",
-    resetButtonId: "filme-reset",
-    windowId: "filme-reel-window",
-    listId: "filme-reel-list",
-    poolListId: "filme-pool-list",
-    noteId: "filme-draw-note",
-    items: FILMES,
-    storageKey: "filmes",
-  });
+  initLoveCounter("2025-06-19T23:35:00");
+  initConquistas("conquistas-grid", DESEJOS, "desejos", "conquistas-resumo");
 </script>
 <script src="js/pets-data.js"></script>
 <script>

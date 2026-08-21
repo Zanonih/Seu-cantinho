@@ -1,0 +1,1672 @@
+/* ============================================
+   Para Você — folha de estilos compartilhada
+   Paleta: papel de carta romântico, selo de cera
+   ============================================ */
+
+:root {
+  --cream: #FBF3EC;
+  --paper: #F7E9DE;
+  --blush: #F1D3CE;
+  --rose: #C97B84;
+  --rose-deep: #A85A66;
+  --wine: #6E2B3A;
+  --sage: #8C9A7B;
+  --ink: #3A2C2E;
+  --ink-soft: #6B5750;
+  --gold: #C9A24B;
+
+  --display: 'Cormorant Garamond', serif;
+  --body: 'Jost', sans-serif;
+
+  --radius: 3px;
+  --shadow-card: 0 10px 30px rgba(110, 43, 58, 0.12);
+
+  color-scheme: light;
+}
+
+/* -------- Modo noturno -------- */
+/* Trocamos só os tons-base; a estrutura e as formas continuam as mesmas. */
+:root[data-theme="dark"] {
+  --cream: #221619;
+  --paper: #2C1B20;
+  --blush: #3A242A;
+  --rose: #C97B84;
+  --rose-deep: #E29AA2;
+  --wine: #E7B8BF;
+  --sage: #A5B593;
+  --ink: #F3E7E3;
+  --ink-soft: #CBB6B2;
+  --gold: #E3C579;
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(201,123,132,0.07) 0, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(140,154,123,0.08) 0, transparent 45%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
+
+  /* -------- Transição suave ao entrar em cada página -------- */
+  opacity: 0;
+}
+
+body.is-ready {
+  opacity: 1;
+  transition: opacity 0.5s ease, background-color 0.4s ease, color 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+/* se o JS não rodar por algum motivo, a página não pode ficar invisível
+   (a classe "js" é adicionada bem cedo, direto no <head>) */
+html:not(.js) body { opacity: 1; }
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+
+/* -------- Cabeçalho / navegação de "carimbos" -------- */
+
+.site-header {
+  padding: 2.2rem 1.5rem 1.2rem;
+  text-align: center;
+}
+
+.site-title {
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--wine);
+  letter-spacing: 0.02em;
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.site-subtitle {
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 1.6rem;
+}
+
+/* -------- Contador de tempo juntos -------- */
+
+.love-counter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 2.5vw, 1.4rem);
+  margin: 0 0 0.6rem;
+}
+
+.love-counter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+}
+
+.love-counter-value {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  color: var(--wine);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.love-counter-label {
+  font-family: var(--body);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 0.25rem;
+}
+
+.love-counter-caption {
+  text-align: center;
+  font-family: var(--body);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0 0 0.6rem;
+}
+
+@media (max-width: 480px) {
+  .love-counter { gap: 0.5rem; }
+  .love-counter-item { min-width: 38px; }
+}
+
+.stamp-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.stamp-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px dashed var(--rose-deep);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--wine);
+  background: rgba(255,255,255,0.4);
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stamp-nav a .icon { font-size: 1rem; }
+
+.stamp-nav a:hover,
+.stamp-nav a:focus-visible {
+  background: var(--rose);
+  color: var(--cream);
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: var(--shadow-card);
+}
+
+.stamp-nav a[aria-current="page"] {
+  position: relative;
+  background: var(--wine);
+  color: var(--cream);
+  border-style: solid;
+  transform: rotate(-1.3deg);
+  box-shadow: var(--shadow-card);
+}
+
+/* moldura pontilhada por dentro, tipo carimbo postal "usado" */
+.stamp-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(251, 243, 236, 0.55);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.stamp-nav a[aria-current="page"]:hover,
+.stamp-nav a[aria-current="page"]:focus-visible {
+  transform: rotate(-1.3deg) translateY(-2px);
+}
+
+/* -------- Container / seções -------- */
+
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 5rem;
+}
+
+.card {
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+  position: relative;
+}
+
+/* borda de papel rasgado no topo do card */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 10px;
+  background: var(--cream);
+  clip-path: polygon(0% 100%, 4% 0%, 8% 100%, 12% 0%, 16% 100%, 20% 0%, 24% 100%, 28% 0%, 32% 100%, 36% 0%, 40% 100%, 44% 0%, 48% 100%, 52% 0%, 56% 100%, 60% 0%, 64% 100%, 68% 0%, 72% 100%, 76% 0%, 80% 100%, 84% 0%, 88% 100%, 92% 0%, 96% 100%, 100% 0%, 100% 100%, 0 100%);
+}
+
+h2.section-title {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  color: var(--wine);
+  margin-top: 0;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.lede {
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  max-width: 60ch;
+}
+
+/* -------- Botões -------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  background: var(--wine);
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn:hover, .btn:focus-visible { background: var(--rose-deep); transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* -------- Selo de cera (elemento assinatura) -------- */
+
+.wax-seal {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--rose) 0%, var(--wine) 70%);
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.2rem;
+  box-shadow: 0 3px 8px rgba(110,43,58,0.35), inset 0 2px 3px rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+/* -------- Rodapé -------- */
+
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem 3rem;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.footer-line {
+  margin: 0 0 0.4rem;
+}
+
+.footer-coords {
+  display: inline-block;
+  font-family: var(--body);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-coords:hover,
+.footer-coords:focus-visible {
+  opacity: 1;
+  color: var(--wine);
+}
+
+/* -------- Grade de fotos -------- */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.6rem;
+}
+
+.gallery-item {
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  position: relative;
+  background: linear-gradient(135deg, var(--blush), var(--rose));
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 10px rgba(110,43,58,0.15);
+}
+
+.gallery-item:hover, .gallery-item:focus-visible {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: var(--shadow-card);
+  z-index: 2;
+}
+
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+.gallery-item img.is-blurred {
+  filter: blur(22px);
+  transform: scale(1.12);
+  transition: filter 0.45s ease, transform 0.45s ease;
+}
+
+.gallery-item .placeholder-label {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--wine);
+  font-family: var(--body);
+}
+
+/* Lightbox */
+
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(58, 44, 46, 0.88);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 2rem;
+}
+
+.lightbox.is-open { display: flex; }
+
+.lightbox img {
+  max-width: min(90vw, 720px);
+  max-height: 80vh;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  background: var(--cream);
+  border: none;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--wine);
+}
+
+/* -------- Sorteador (filmes / receitas) -------- */
+
+.draw-stage {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 2.4rem 1rem;
+  border: 1px dashed var(--rose-deep);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.35);
+}
+
+.draw-result {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  color: var(--wine);
+  min-height: 3.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.draw-result.is-shuffling { opacity: 0.4; }
+
+.draw-note {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
+}
+
+/* -------- Lista de músicas -------- */
+
+.record {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  margin: 0 auto 1.6rem;
+  background:
+    radial-gradient(circle at center, var(--cream) 0 8%, var(--ink) 9% 10%, var(--wine) 11% 100%),
+    repeating-radial-gradient(circle at center, rgba(0,0,0,0.15) 0 2px, transparent 2px 6px);
+  animation: spin 6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.6rem;
+  margin-top: 2rem;
+}
+
+.playlist-card {
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(110,43,58,0.12);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.playlist-title {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.3rem;
+  margin: 0 0 0.8rem;
+}
+
+.playlist-card iframe { display: block; }
+
+.playlist-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  border: 1px dashed var(--rose-deep);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  margin-top: 2rem;
+}
+
+/* -------- Roleta / rolo giratório (sorteio) -------- */
+
+.reel-window {
+  position: relative;
+  height: 168px;
+  max-width: 420px;
+  margin: 2rem auto 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgba(110, 43, 58, 0.25);
+  background: rgba(255,255,255,0.4);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
+  transition: opacity 0.18s ease;
+}
+
+.reel-window.is-resetting { opacity: 0; }
+
+.reel-window.landed { animation: reel-glow 0.9s ease; }
+
+@keyframes reel-glow {
+  0% { box-shadow: 0 0 0 rgba(201,123,132,0); }
+  30% { box-shadow: 0 0 24px rgba(201,123,132,0.55); }
+  100% { box-shadow: 0 0 0 rgba(201,123,132,0); }
+}
+
+.reel-marker {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 56px;
+  transform: translateY(-50%);
+  border-top: 1px dashed var(--rose-deep);
+  border-bottom: 1px dashed var(--rose-deep);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.reel-list {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.reel-item {
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1.2rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--wine);
+}
+
+@media (max-width: 480px) {
+  .stamp-nav a { font-size: 0.78rem; padding: 0.5rem 0.85rem; }
+}
+
+/* -------- Caça-níquel (roleta de sorteio) -------- */
+
+.slot-machine {
+  position: relative;
+  max-width: 420px;
+  margin: 2rem auto 0;
+  padding: 1.1rem 1rem 1.3rem;
+  border-radius: 20px;
+  background: linear-gradient(160deg, var(--wine) 0%, var(--rose-deep) 100%);
+  box-shadow: 0 14px 34px rgba(110,43,58,0.28), inset 0 2px 4px rgba(255,255,255,0.25);
+}
+
+.slot-lights {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-bottom: 0.8rem;
+}
+
+.slot-lights span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px rgba(201,162,75,0.9);
+  animation: slot-blink 1.6s ease-in-out infinite;
+}
+
+.slot-lights span:nth-child(2) { animation-delay: 0.15s; }
+.slot-lights span:nth-child(3) { animation-delay: 0.3s; }
+.slot-lights span:nth-child(4) { animation-delay: 0.45s; }
+.slot-lights span:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes slot-blink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.slot-machine .reel-window {
+  margin: 0;
+  max-width: none;
+  background: var(--cream);
+  border: none;
+  border-radius: 13px;
+  box-shadow: inset 0 3px 12px rgba(58,44,46,0.3);
+}
+
+.slot-machine .reel-marker {
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  background: rgba(201,162,75,0.1);
+}
+
+.draw-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-top: 1.6rem;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--rose-deep);
+  color: var(--wine);
+}
+
+.btn-ghost:hover, .btn-ghost:focus-visible {
+  background: rgba(201,123,132,0.15);
+  color: var(--wine);
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.draw-pool {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.6rem;
+  max-width: 560px;
+  margin: 1.7rem auto 0;
+  padding: 0;
+}
+
+.draw-pool li {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(110,43,58,0.12);
+  transition: opacity 0.3s ease;
+}
+
+.draw-pool li.is-drawn {
+  text-decoration: line-through;
+  text-decoration-color: var(--rose-deep);
+  opacity: 0.4;
+}
+
+@media (max-width: 480px) {
+  .slot-machine { padding: 0.9rem 0.7rem 1.1rem; }
+}
+
+/* -------- Álbum em linha do tempo -------- */
+
+.timeline-scroll {
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rose-deep) transparent;
+  padding-right: 0.6rem;
+}
+
+.timeline-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.timeline-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--rose-deep);
+  border-radius: 999px;
+}
+
+.timeline {
+  position: relative;
+  margin-top: 2.4rem;
+  padding: 0.5rem 0 0.5rem;
+}
+
+.timeline-to-be-continued {
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--rose-deep);
+  margin: 2rem 0 0.5rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--rose-deep) 0 8px,
+    transparent 8px 18px
+  );
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  width: 50%;
+  padding: 0 2.6rem 3rem;
+  box-sizing: border-box;
+}
+
+.timeline-item.is-left {
+  left: 0;
+  text-align: right;
+}
+
+.timeline-item.is-right {
+  left: 50%;
+  text-align: left;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 0.3rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--wine);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--rose-deep);
+}
+
+.timeline-item.is-left .timeline-marker { right: -8px; }
+.timeline-item.is-right .timeline-marker { left: -8px; }
+
+.timeline-content {
+  display: inline-block;
+  max-width: 260px;
+}
+
+.timeline-date {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--rose-deep);
+  font-size: 1rem;
+  margin: 0 0 0.6rem;
+}
+
+.timeline-photo.gallery-item {
+  width: 220px;
+  max-width: 100%;
+}
+
+.timeline-caption {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0.7rem 0 0;
+}
+
+@media (max-width: 640px) {
+  .timeline::before { left: 18px; }
+
+  .timeline-item,
+  .timeline-item.is-left,
+  .timeline-item.is-right {
+    width: 100%;
+    left: 0;
+    text-align: left;
+    padding: 0 0 2.8rem 2.8rem;
+  }
+
+  .timeline-item.is-left .timeline-marker,
+  .timeline-item.is-right .timeline-marker {
+    left: 10px;
+    right: auto;
+  }
+
+  .timeline-content { max-width: 100%; }
+}
+
+/* -------- Carta lacrada (página inicial), estilo envelope -------- */
+
+.letter-card {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+}
+
+.letter-content {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+}
+
+.letter-greeting {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  color: var(--wine);
+  text-align: center;
+  margin: 0 0 1.1rem;
+}
+
+.letter-signature {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--wine);
+  text-align: right;
+  margin: 1.5rem 0 0;
+}
+
+.letter-content.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.envelope-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  perspective: 1300px;
+}
+
+.envelope-pocket {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(155deg, #F3E6DA 0%, #E9D6C4 55%, #E3CBB6 100%);
+  transition: opacity 0.5s ease 0.55s, transform 0.5s ease 0.55s;
+}
+
+.envelope-pocket::before {
+  /* linha de dobra inferior do envelope, sugerindo o bolso */
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 14%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,43,58,0.18), transparent);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: linear-gradient(160deg, #F0E1D3 0%, #DFC5AC 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.65s cubic-bezier(.45,.1,.25,1) 0.12s;
+  backface-visibility: hidden;
+  box-shadow: 0 3px 10px rgba(74, 24, 32, 0.12);
+}
+
+.seal-button {
+  position: absolute;
+  top: calc(52% - 46px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 3;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.seal-img {
+  width: clamp(96px, 22vw, 140px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 18px rgba(110, 43, 58, 0.35));
+  transition: transform 0.25s ease, filter 0.25s ease;
+  animation: seal-breathe 3.6s ease-in-out infinite;
+}
+
+.seal-button:hover .seal-img,
+.seal-button:focus-visible .seal-img {
+  transform: scale(1.06) rotate(-2deg);
+  filter: drop-shadow(0 14px 22px rgba(110, 43, 58, 0.45));
+}
+
+.seal-button:active .seal-img { transform: scale(0.96) rotate(1deg); }
+
+@keyframes seal-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+/* sequência de abertura */
+.letter-card.is-open .seal-button {
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.5) rotate(12deg);
+}
+
+.letter-card.is-open .envelope-flap {
+  transform: rotateX(-165deg);
+}
+
+.letter-card.is-open .envelope-pocket {
+  opacity: 0;
+  transform: translateY(-18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal-img { animation: none; }
+  .envelope-flap, .envelope-pocket, .seal-button, .letter-content { transition: none; }
+}
+
+/* -------- Bichinhos animados, soltos por cima da página -------- */
+
+.pet-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40; /* abaixo do lightbox (z-index 50), acima do resto */
+}
+
+.pet-layer .pet-sprite {
+  position: absolute;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: left, top, transform;
+  filter: drop-shadow(0 2px 3px rgba(58,44,46,0.25));
+  transition: filter 0.15s ease;
+}
+
+.pet-layer .pet-sprite:hover {
+  filter: drop-shadow(0 2px 3px rgba(58,44,46,0.25)) brightness(1.06);
+}
+
+.pet-layer .pet-sprite.is-dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 6px 10px rgba(58,44,46,0.35)) brightness(1.1);
+  transition: none;
+}
+
+.pet-layer .pet-heart {
+  position: absolute;
+  pointer-events: none;
+  font-size: 15px;
+  color: var(--rose-deep);
+  animation: pet-heart-float 0.9s ease-out forwards;
+}
+
+@keyframes pet-heart-float {
+  0%   { opacity: 1; transform: translate(-50%, 0) scale(0.6); }
+  100% { opacity: 0; transform: translate(-50%, -30px) scale(1.2); }
+}
+
+/* -------- Bichinhos (bio de cada pet) -------- */
+
+.pet-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.4rem;
+  margin-top: 1.8rem;
+  text-align: left;
+}
+
+.pet-bio-card {
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(74, 24, 32, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.pet-bio-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-bio-card h3 {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.25rem;
+  margin: 0.7rem 1rem 0.2rem;
+}
+
+.pet-bio-card p {
+  font-family: var(--body);
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0 1rem 1rem;
+}
+
+.pet-bio-card.is-memory {
+  border-color: rgba(201, 162, 75, 0.4);
+  background: linear-gradient(180deg, var(--paper) 80%, rgba(201, 162, 75, 0.08));
+}
+
+.pet-bio-card.is-memory img {
+  filter: saturate(0.92);
+}
+
+/* -------- Um tom de fundo levemente diferente por bichinho -------- */
+.pet-bio-card[data-pet-id="maia"]     { background: color-mix(in srgb, var(--rose) 14%, var(--paper)); }
+.pet-bio-card[data-pet-id="ellie"]    { background: color-mix(in srgb, var(--sage) 16%, var(--paper)); }
+.pet-bio-card[data-pet-id="negao"]    { background: color-mix(in srgb, var(--wine) 12%, var(--paper)); }
+.pet-bio-card[data-pet-id="pingo"]    { background: color-mix(in srgb, var(--gold) 16%, var(--paper)); }
+.pet-bio-card[data-pet-id="josh"]     { background: color-mix(in srgb, var(--blush) 55%, var(--paper)); }
+.pet-bio-card[data-pet-id="vitoria"]  { background: color-mix(in srgb, var(--rose-deep) 12%, var(--paper)); }
+.pet-bio-card[data-pet-id="sansara"]  { background: color-mix(in srgb, var(--sage) 24%, var(--paper)); }
+.pet-bio-card[data-pet-id="hadox"]    { background: color-mix(in srgb, var(--gold) 24%, var(--paper)); }
+.pet-bio-card[data-pet-id="pichula"]  { background: color-mix(in srgb, var(--ink-soft) 14%, var(--paper)); }
+
+/* -------- Lista de desejos -------- */
+
+.wishlist-contador {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.03em;
+  margin: 1.4rem 0 0.6rem;
+}
+
+.wishlist {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 480px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wishlist-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.1);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.wishlist-item label:hover {
+  border-color: rgba(110, 43, 58, 0.28);
+}
+
+.wishlist-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.wishlist-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--rose-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.wishlist-item input:checked ~ .wishlist-check {
+  background: var(--wine);
+  border-color: var(--wine);
+}
+
+.wishlist-item input:checked ~ .wishlist-check::after {
+  content: "✓";
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.wishlist-text {
+  font-family: var(--body);
+  font-size: 0.94rem;
+  color: var(--ink);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.wishlist-item.is-done .wishlist-text {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+/* -------- Cápsula do tempo -------- */
+
+.capsula-countdown {
+  margin-top: 1.4rem;
+}
+
+.capsula-wrap {
+  position: relative;
+}
+
+/* ---- Últimos 10 segundos: números pulsando e selo tremendo ---- */
+
+.capsula-countdown.is-imminent .love-counter-value {
+  color: var(--wine);
+  animation: capsula-tick 1s ease-in-out infinite;
+}
+
+@keyframes capsula-tick {
+  0%, 100% { transform: scale(1); text-shadow: none; }
+  50% { transform: scale(1.22); text-shadow: 0 0 16px rgba(168, 90, 102, 0.55); }
+}
+
+.wax-seal.is-imminent {
+  animation: capsula-shake 0.5s ease-in-out infinite;
+  box-shadow: 0 3px 8px rgba(110,43,58,0.35), inset 0 2px 3px rgba(255,255,255,0.25), 0 0 20px rgba(201,162,75,0.55);
+}
+
+@keyframes capsula-shake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-8deg) scale(1.06); }
+  75% { transform: rotate(8deg) scale(1.06); }
+}
+
+/* ---- Sequência de abertura: o lacre "estoura" e a carta é revelada ---- */
+
+#capsula-lacrada {
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.capsula-wrap.is-opening #capsula-lacrada {
+  opacity: 0;
+  transform: scale(0.86) rotate(-4deg);
+  pointer-events: none;
+}
+
+.capsula-wrap.is-opening #capsula-lacrada .wax-seal {
+  animation: capsula-burst 0.6s cubic-bezier(.25,.7,.4,1) forwards;
+}
+
+@keyframes capsula-burst {
+  0%   { transform: scale(1) rotate(0deg); }
+  35%  { transform: scale(1.4) rotate(-8deg); }
+  100% { transform: scale(0.2) rotate(10deg); opacity: 0; }
+}
+
+#capsula-aberta {
+  opacity: 0;
+  transform: translateY(14px) scale(0.94);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#capsula-aberta.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#capsula-aberta .wax-seal {
+  animation: seal-breathe 3.6s ease-in-out infinite;
+}
+
+.capsula-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  font-size: 1.5rem;
+  z-index: 3;
+  animation: capsula-spark-fly var(--dur, 0.9s) ease-out forwards;
+}
+
+@keyframes capsula-spark-fly {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.25) rotate(35deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capsula-countdown.is-imminent .love-counter-value { animation: none; }
+  .wax-seal.is-imminent { animation: none; }
+  #capsula-lacrada, #capsula-aberta { transition: none; }
+}
+
+/* -------- Página de conquistas (versão-troféu dos desejos) -------- */
+
+.conquistas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.6rem;
+  text-align: left;
+}
+
+.conquista-selo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 1.1rem 0.8rem;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.conquista-selo.is-feita {
+  background: linear-gradient(180deg, var(--blush), var(--paper));
+  border-color: rgba(201, 162, 75, 0.5);
+  box-shadow: var(--shadow-card);
+}
+
+.conquista-selo.is-feita:hover { transform: translateY(-3px) rotate(-1deg); }
+
+.conquista-medalha {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: var(--wine);
+  color: var(--gold);
+  box-shadow: inset 0 2px 3px rgba(255,255,255,0.25), 0 2px 6px rgba(74,24,32,0.25);
+}
+
+.conquista-selo:not(.is-feita) .conquista-medalha {
+  background: rgba(110, 43, 58, 0.08);
+  color: var(--ink-soft);
+  box-shadow: none;
+}
+
+.conquista-selo:not(.is-feita) {
+  opacity: 0.65;
+}
+
+.conquista-texto {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.conquista-selo:not(.is-feita) .conquista-texto { color: var(--ink-soft); }
+
+.conquistas-resumo {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  margin: 0.4rem 0 0;
+}
+
+/* -------- Cards de bichinho clicáveis (abrem álbum) -------- */
+
+.pet-bio-card {
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pet-bio-card:hover,
+.pet-bio-card:focus-visible {
+  transform: translateY(-4px) rotate(-1deg) scale(1.02);
+  box-shadow: 0 10px 22px rgba(74, 24, 32, 0.16);
+  outline: none;
+}
+
+.pet-bio-card:nth-child(even):hover,
+.pet-bio-card:nth-child(even):focus-visible {
+  transform: translateY(-4px) rotate(1deg) scale(1.02);
+}
+
+/* -------- Modal do álbum e da foto grande -------- */
+
+.pet-modal-travado {
+  overflow: hidden;
+}
+
+.pet-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 26, 28, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+}
+
+.pet-modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pet-modal {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 1.6rem;
+  max-width: 720px;
+  width: 100%;
+  max-height: 82vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.94);
+  transition: transform 0.25s ease;
+}
+
+.pet-modal-overlay.is-open .pet-modal {
+  transform: scale(1);
+}
+
+.pet-modal h3 {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0 0 1.1rem;
+}
+
+.pet-album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.pet-album-thumb {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.pet-album-thumb:hover,
+.pet-album-thumb:focus-visible {
+  transform: scale(1.04);
+  outline: 2px solid var(--rose-deep);
+}
+
+.pet-album-thumb img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(110, 43, 58, 0.1);
+  color: var(--wine);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 2;
+}
+
+.pet-modal-close:hover { background: rgba(110, 43, 58, 0.22); }
+
+/* -------- Lightbox (foto grande) -------- */
+
+.pet-lightbox-overlay .pet-modal-close {
+  top: 1.2rem;
+  right: 1.2rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.pet-lightbox-overlay .pet-modal-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+.pet-lightbox-img {
+  max-width: min(90vw, 720px);
+  max-height: 84vh;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: scale(0.96);
+  transition: transform 0.25s ease;
+}
+
+.pet-lightbox-overlay.is-open .pet-lightbox-img {
+  transform: scale(1);
+}
+
+.pet-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pet-lightbox-nav:hover { background: rgba(255, 255, 255, 0.28); }
+.pet-lightbox-prev { left: 1rem; }
+.pet-lightbox-next { right: 1rem; }
+
+@media (max-width: 560px) {
+  .pet-lightbox-nav { width: 38px; height: 38px; font-size: 1.3rem; }
+}
+
+/* -------- Música de fundo (player escondido + botão de mutar) -------- */
+
+.bgm-yt {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  bottom: 0;
+  left: 0;
+}
+
+.bgm-toggle {
+  position: fixed;
+  bottom: 1.1rem;
+  right: 1.1rem;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--wine);
+  color: var(--cream);
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bgm-toggle:hover { transform: scale(1.08); }
+
+.bgm-toggle:active { transform: scale(0.96); }
+
+@media (max-width: 560px) {
+  .bgm-toggle { width: 40px; height: 40px; font-size: 1.05rem; bottom: 0.8rem; right: 0.8rem; }
+}
+
+/* -------- Easter egg dos bichinhos -------- */
+
+.pet-secret-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 5.5rem;
+  transform: translate(-50%, 12px);
+  max-width: min(92vw, 420px);
+  text-align: center;
+  background: var(--wine);
+  color: var(--cream);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  padding: 0.9rem 1.3rem;
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  z-index: 60;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.pet-secret-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.pet-secret-heart {
+  position: fixed;
+  top: -5vh;
+  font-size: 1.4rem;
+  color: var(--rose-deep);
+  z-index: 55;
+  pointer-events: none;
+  animation: pet-secret-fall var(--dur, 3s) linear forwards;
+}
+
+@keyframes pet-secret-fall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.95; }
+  100% { transform: translateY(110vh) rotate(200deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-secret-toast { transition: opacity 0.2s ease; transform: translate(-50%, 0); }
+}
+
+/* -------- Botão de modo claro/escuro -------- */
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1.1rem;
+  left: 1.1rem;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper);
+  color: var(--wine);
+  border: 1px solid rgba(110, 43, 58, 0.2);
+  font-size: 1.15rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.theme-toggle:hover { transform: scale(1.08); }
+.theme-toggle:active { transform: scale(0.96); }
+
+@media (max-width: 560px) {
+  .theme-toggle { width: 40px; height: 40px; font-size: 1rem; bottom: 0.8rem; left: 0.8rem; }
+}
+
+/* -------- Tela de senha (perguntinha pra entrar) -------- */
+
+.site-lock {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  padding: 1.5rem;
+  transition: opacity 0.5s ease;
+}
+
+.site-lock.is-unlocked {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-lock-card {
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  background: var(--paper);
+  border-radius: 20px;
+  padding: 2.2rem 1.7rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.site-lock-photo {
+  width: 110px;
+  height: auto;
+  image-rendering: pixelated;
+  margin-bottom: 1rem;
+}
+
+.site-lock-question {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--wine);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  margin: 0 0 1.3rem;
+}
+
+.site-lock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.site-lock-input {
+  font-family: var(--body);
+  font-size: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--wine);
+  background: var(--cream);
+  color: var(--ink);
+  text-align: center;
+}
+
+.site-lock-input:focus {
+  outline: 2px solid var(--wine);
+  outline-offset: 2px;
+}
+
+.site-lock-button {
+  font-family: var(--body);
+  font-size: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--wine);
+  color: var(--cream);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.site-lock-button:hover { transform: scale(1.03); }
+.site-lock-button:active { transform: scale(0.97); }
+
+.site-lock-erro {
+  margin: 0.9rem 0 0;
+  color: var(--wine);
+  font-size: 0.88rem;
+}
+
+@keyframes site-lock-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.site-lock-card.is-shaking {
+  animation: site-lock-shake 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-lock-card.is-shaking { animation: none; }
+}
