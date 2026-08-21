@@ -110,6 +110,11 @@ const DESEJOS = [
   // adicione mais desejos aqui
 ];
 
+// ---- Easter egg: clique 7 vezes seguidas num bichinho específico (por
+// padrão, a Maia — dá pra trocar o SEGREDO_ID lá em initPetScene) pra
+// revelar uma mensagem escondida. Troque o texto à vontade. ----
+const MENSAGEM_SECRETA = "Você me encontrou! 🐾 Só um lembrete: eu te amo muito, viu?";
+
 // Cole aqui o link normal de cada playlist do Spotify (o mesmo que aparece
 // quando você clica em "Compartilhar → Copiar link da playlist").
 // Não precisa mexer em mais nada — o site converte pro player sozinho.
@@ -141,6 +146,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ---- Modo claro/escuro ----
+// O tema em si já é aplicado o mais cedo possível por um script inline no
+// <head> de cada página (pra não "piscar" claro antes de virar escuro).
+// Essa função só cuida do botão e de guardar a escolha.
+function initThemeToggle(buttonId = "theme-toggle") {
+  const botao = document.getElementById(buttonId);
+  if (!botao) return;
+
+  const CHAVE = "cantinho:tema";
+
+  function temaAtual() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+
+  function atualizarIcone() {
+    const escuro = temaAtual() === "dark";
+    botao.textContent = escuro ? "☀️" : "🌙";
+    botao.setAttribute("aria-label", escuro ? "Mudar para modo claro" : "Mudar para modo escuro");
+  }
+
+  botao.addEventListener("click", () => {
+    const novo = temaAtual() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", novo);
+    try {
+      localStorage.setItem(CHAVE, novo);
+    } catch {
+      // localStorage bloqueado — só não persiste pra próxima visita
+    }
+    atualizarIcone();
+  });
+
+  atualizarIcone();
+}
 
 // ---- Álbum em linha do tempo + lightbox ----
 // Cada item em `items` pode ter { data, src, alt, legenda }. Mantém o mesmo
@@ -611,6 +650,7 @@ function initWishlist(listId, items, storageKey) {
 }
 
 // ---- Cápsula do tempo (fica lacrada até a data marcada) ----
+// ---- Cápsula do tempo (fica lacrada até a data marcada) ----
 function initTimeCapsule(dataAberturaISO) {
   const dataAbertura = new Date(dataAberturaISO);
   const wrap = document.getElementById("capsula-wrap");
@@ -703,6 +743,39 @@ function initTimeCapsule(dataAberturaISO) {
   setInterval(atualizar, 1000);
 }
 
+// ---- Página de conquistas: mostra os desejos já marcados como troféus ----
+// Usa a mesma chave de localStorage do initWishlist, então tudo que já foi
+// marcado em desejos.html aparece aqui automaticamente.
+function initConquistas(containerId, items, storageKey, resumoId) {
+  const container = document.getElementById(containerId);
+  if (!container || !items) return;
+
+  const CHAVE = `cantinho:desejos:${storageKey}`;
+
+  function carregarMarcados() {
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+      return Array.isArray(salvo) ? salvo.filter((texto) => items.includes(texto)) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  const marcados = carregarMarcados();
+
+  container.innerHTML = items.map((texto) => {
+    const feita = marcados.includes(texto);
+    return `
+      <div class="conquista-selo ${feita ? "is-feita" : ""}">
+        <span class="conquista-medalha" aria-hidden="true">${feita ? "🏆" : "🔒"}</span>
+        <span class="conquista-texto">${texto}</span>
+      </div>`;
+  }).join("");
+
+  const resumo = resumoId ? document.getElementById(resumoId) : null;
+  if (resumo) resumo.textContent = `${marcados.length} de ${items.length} conquistas desbloqueadas`;
+}
+
 // ---- Carta lacrada da página inicial (envelope que abre ao clicar no selo) ----
 function initLetterSeal() {
   const card = document.getElementById("letter-card");
@@ -781,6 +854,39 @@ function initLetterSeal() {
 // { id: "nome", states: { andando: {src,w,h}, sentado: {src,w,h}, deitado: {src,w,h} } }
 function initPetScene(pets) {
   if (!pets || pets.length === 0) return;
+
+  // ---- Easter egg: cliques seguidos num bicho específico ----
+  const SEGREDO_ID = "maia";     // troque pelo id de outro bicho, se quiser
+  const SEGREDO_QTD = 7;         // quantos cliques seguidos são necessários
+  const SEGREDO_JANELA_MS = 2500; // tempo máximo entre um clique e o próximo
+  let segredoContagem = 0;
+  let segredoUltimoClique = 0;
+
+  function dispararSegredoSecreto() {
+    const toast = document.createElement("div");
+    toast.className = "pet-secret-toast";
+    toast.textContent = MENSAGEM_SECRETA;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add("is-visible"));
+    setTimeout(() => {
+      toast.classList.remove("is-visible");
+      setTimeout(() => toast.remove(), 500);
+    }, 4200);
+
+    if (!reduzMovimento) {
+      const total = 22;
+      for (let i = 0; i < total; i++) {
+        const heart = document.createElement("span");
+        heart.className = "pet-secret-heart";
+        heart.textContent = i % 2 === 0 ? "♥" : "✨";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDelay = (Math.random() * 0.6) + "s";
+        heart.style.setProperty("--dur", (2.2 + Math.random() * 1.4) + "s");
+        document.body.appendChild(heart);
+        heart.addEventListener("animationend", () => heart.remove());
+      }
+    }
+  }
 
   const DISPLAY_HEIGHT = 44; // altura de cada bicho na tela, em px
   const MARGIN = 8; // margem mínima em relação às bordas da tela, em px
@@ -957,6 +1063,17 @@ function initPetScene(pets) {
       heart.style.top = this.y - 18 + "px";
       layer.appendChild(heart);
       setTimeout(() => heart.remove(), 900);
+
+      // ---- Easter egg: contagem de cliques seguidos no bicho-segredo ----
+      if (this.config.id === SEGREDO_ID) {
+        const agora = performance.now();
+        segredoContagem = (agora - segredoUltimoClique <= SEGREDO_JANELA_MS) ? segredoContagem + 1 : 1;
+        segredoUltimoClique = agora;
+        if (segredoContagem >= SEGREDO_QTD) {
+          segredoContagem = 0;
+          dispararSegredoSecreto();
+        }
+      }
 
       if (!reduzMovimento && !this.dragging && this.state === "andando" && this.config.states.sentado) {
         this.vx = 0;

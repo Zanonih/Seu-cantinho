@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Aplica o tema (claro/escuro) o mais cedo possível, antes da página
+  // pintar na tela, pra não dar aquele "flash" da cor errada.
+  try {
+    var temaSalvo = localStorage.getItem("cantinho:tema");
+    if (temaSalvo === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) { /* localStorage bloqueado — só usa o tema padrão */ }
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
@@ -37,6 +45,7 @@
       <li><a href="filmes.html" data-page="filmes"><span class="icon">🎬</span>Assistir</a></li>
       <li><a href="receitas.html" data-page="receitas"><span class="icon">🍳</span>Receitas</a></li>
       <li><a href="desejos.html" data-page="desejos"><span class="icon">✨</span>Desejos</a></li>
+      <li><a href="conquistas.html" data-page="conquistas"><span class="icon">🏆</span>Conquistas</a></li>
       <li><a href="capsula.html" data-page="capsula"><span class="icon">🔒</span>Cápsula</a></li>
     </ul>
   </nav>
@@ -69,8 +78,12 @@
 <script src="js/script.js"></script>
 <audio id="bgm-audio" src="audio/musica-fundo.mp3" preload="auto" loop></audio>
 <button type="button" id="bgm-toggle" class="bgm-toggle" aria-pressed="false" aria-label="Tocar música de fundo">▶️</button>
+<button type="button" id="theme-toggle" class="theme-toggle">🌙</button>
 <script>
   initBackgroundMusic(13, 0.4);
+</script>
+<script>
+  initThemeToggle();
 </script>
 <script>
   initLoveCounter("2025-06-19T23:35:00");
