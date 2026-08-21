@@ -122,13 +122,14 @@ const PRESENTES = [
   "Uma tarde de spa em casa",
   "Um passeio surpresa, vc só decide o dia",
   "Carrinho da shein/shopee até R$100",
+  "2 minutos de cosquinha",
   // adicione mais presentes aqui
 ];
 
 // ---- Easter egg: clique 7 vezes seguidas num bichinho específico (por
 // padrão, a Maia — dá pra trocar o SEGREDO_ID lá em initPetScene) pra
 // revelar uma mensagem escondida. Troque o texto à vontade. ----
-const MENSAGEM_SECRETA = "Você me encontrou! 🐾 Só um lembrete: eu te amo muito, viu?";
+const MENSAGEM_SECRETA = "Você me encontrou! 🐾 Te amo";
 
 // Cole aqui o link normal de cada playlist do Spotify (o mesmo que aparece
 // quando você clica em "Compartilhar → Copiar link da playlist").
