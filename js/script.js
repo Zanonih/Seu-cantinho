@@ -115,13 +115,13 @@ const DESEJOS = [
 // um marco, e ele sai da lista (não repete). Edite à vontade — pode ter
 // mais opções do que marcos, sem problema, só sobra pro próximo marco.
 const PRESENTES = [
-  "Um jantar à luz de vela, no lugar que ela escolher",
+  "Um jantar no lugar que você escolher",
   "Um dia inteiro sem tarefas de casa (eu cuido de tudo)",
-  "Uma massagem relaxante",
+  "Massagem MUITO FODA",
   "Escolher o filme/série da semana, sem discussão",
-  "Um café da manhã na cama",
-  "Uma tarde de spa em casa (máscara, banho de espuma, tudo)",
-  "Um passeio surpresa, só ela decide o dia",
+  "Uma tarde de spa em casa",
+  "Um passeio surpresa, vc só decide o dia",
+  "Carrinho da shein/shopee até R$100",
   // adicione mais presentes aqui
 ];
 
