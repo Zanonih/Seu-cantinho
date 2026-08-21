@@ -1268,6 +1268,127 @@ h2.section-title {
   margin: 0.4rem 0 0;
 }
 
+/* -------- Barra de progresso com marcos -------- */
+
+.conquistas-progresso {
+  max-width: 560px;
+  margin: 1.6rem auto 0;
+}
+
+.conquistas-progresso-bar {
+  position: relative;
+  height: 14px;
+  background: rgba(110, 43, 58, 0.1);
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.conquistas-progresso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rose), var(--wine));
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.conquistas-marco {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid rgba(110, 43, 58, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.conquistas-marco.is-alcancado {
+  background: var(--wine);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold);
+}
+
+.conquistas-progresso-legenda {
+  margin-top: 1.6rem;
+  font-family: var(--body);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* -------- Presentes desbloqueados nos marcos -------- */
+
+.conquistas-presentes {
+  max-width: 560px;
+  margin: 1.8rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.conquistas-presente-card {
+  background: var(--blush);
+  border: 1px solid rgba(201, 162, 75, 0.4);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+
+.conquistas-presente-card.is-escolhido {
+  background: var(--paper);
+  border-color: rgba(110, 43, 58, 0.15);
+}
+
+.conquistas-presente-titulo {
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--wine);
+  margin: 0 0 0.7rem;
+}
+
+.conquistas-presente-escolha {
+  font-family: var(--body);
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.conquistas-presente-vazio {
+  font-family: var(--body);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0;
+  text-align: center;
+}
+
+.conquistas-presente-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.conquistas-presente-opcao {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  color: var(--wine);
+  background: var(--cream);
+  border: 1px solid rgba(110, 43, 58, 0.25);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.conquistas-presente-opcao:hover {
+  background: var(--wine);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
 /* -------- Cards de bichinho clicáveis (abrem álbum) -------- */
 
 .pet-bio-card {

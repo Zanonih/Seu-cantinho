@@ -110,6 +110,21 @@ const DESEJOS = [
   // adicione mais desejos aqui
 ];
 
+// Presentes que ela pode escolher a cada marco de conquistas (por padrão,
+// a cada 5 desejos realizados). Ela escolhe UM da lista quando desbloqueia
+// um marco, e ele sai da lista (não repete). Edite à vontade — pode ter
+// mais opções do que marcos, sem problema, só sobra pro próximo marco.
+const PRESENTES = [
+  "Um jantar à luz de vela, no lugar que ela escolher",
+  "Um dia inteiro sem tarefas de casa (eu cuido de tudo)",
+  "Uma massagem relaxante",
+  "Escolher o filme/série da semana, sem discussão",
+  "Um café da manhã na cama",
+  "Uma tarde de spa em casa (máscara, banho de espuma, tudo)",
+  "Um passeio surpresa, só ela decide o dia",
+  // adicione mais presentes aqui
+];
+
 // ---- Easter egg: clique 7 vezes seguidas num bichinho específico (por
 // padrão, a Maia — dá pra trocar o SEGREDO_ID lá em initPetScene) pra
 // revelar uma mensagem escondida. Troque o texto à vontade. ----
@@ -743,27 +758,53 @@ function initTimeCapsule(dataAberturaISO) {
   setInterval(atualizar, 1000);
 }
 
-// ---- Página de conquistas: mostra os desejos já marcados como troféus ----
-// Usa a mesma chave de localStorage do initWishlist, então tudo que já foi
-// marcado em desejos.html aparece aqui automaticamente.
-function initConquistas(containerId, items, storageKey, resumoId) {
-  const container = document.getElementById(containerId);
-  if (!container || !items) return;
+// ---- Página de conquistas: mostra os desejos já marcados como troféus,
+// mais uma barrinha de progresso com marcos a cada N conquistas (padrão 5).
+// A cada marco alcançado, ela pode escolher um presente da lista PRESENTES
+// (cada presente só pode ser escolhido uma vez, no total).
+function initConquistas(config) {
+  const {
+    gridId, items, storageKey, resumoId, progressoId, presentesId,
+    presentes = [], passoMarco = 5,
+  } = config;
 
-  const CHAVE = `cantinho:desejos:${storageKey}`;
+  const grid = document.getElementById(gridId);
+  if (!grid || !items) return;
+
+  const CHAVE_MARCADOS = `cantinho:desejos:${storageKey}`;
+  const CHAVE_PRESENTES = `cantinho:presentes:${storageKey}`;
 
   function carregarMarcados() {
     try {
-      const salvo = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+      const salvo = JSON.parse(localStorage.getItem(CHAVE_MARCADOS) || "[]");
       return Array.isArray(salvo) ? salvo.filter((texto) => items.includes(texto)) : [];
     } catch {
       return [];
     }
   }
 
-  const marcados = carregarMarcados();
+  function carregarPresentesEscolhidos() {
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE_PRESENTES) || "{}");
+      return (salvo && typeof salvo === "object") ? salvo : {};
+    } catch {
+      return {};
+    }
+  }
 
-  container.innerHTML = items.map((texto) => {
+  function salvarPresentesEscolhidos(escolhidos) {
+    try {
+      localStorage.setItem(CHAVE_PRESENTES, JSON.stringify(escolhidos));
+    } catch {
+      // localStorage bloqueado — só não persiste
+    }
+  }
+
+  const marcados = carregarMarcados();
+  let presentesEscolhidos = carregarPresentesEscolhidos();
+
+  // ---- Grade de medalhas ----
+  grid.innerHTML = items.map((texto) => {
     const feita = marcados.includes(texto);
     return `
       <div class="conquista-selo ${feita ? "is-feita" : ""}">
@@ -774,6 +815,94 @@ function initConquistas(containerId, items, storageKey, resumoId) {
 
   const resumo = resumoId ? document.getElementById(resumoId) : null;
   if (resumo) resumo.textContent = `${marcados.length} de ${items.length} conquistas desbloqueadas`;
+
+  // ---- Barra de progresso com marcos ----
+  const progressoEl = progressoId ? document.getElementById(progressoId) : null;
+  if (progressoEl) {
+    const total = items.length;
+    const feitas = marcados.length;
+    const pct = total > 0 ? Math.min(100, (feitas / total) * 100) : 0;
+
+    const marcos = [];
+    for (let m = passoMarco; m <= total; m += passoMarco) marcos.push(m);
+
+    const marcosHtml = marcos.map((m) => {
+      const alcancado = feitas >= m;
+      const posicao = total > 0 ? (m / total) * 100 : 0;
+      return `<span class="conquistas-marco ${alcancado ? "is-alcancado" : ""}" style="left:${posicao}%" title="${m} conquistas">${alcancado ? "🏆" : "🔒"}</span>`;
+    }).join("");
+
+    progressoEl.innerHTML = `
+      <div class="conquistas-progresso-bar">
+        <div class="conquistas-progresso-fill" style="width:${pct}%"></div>
+        ${marcosHtml}
+      </div>
+      <p class="conquistas-progresso-legenda">${feitas} de ${total} · próximo marco a cada ${passoMarco} conquistas</p>
+    `;
+  }
+
+  // ---- Presentes desbloqueados nos marcos ----
+  const presentesEl = presentesId ? document.getElementById(presentesId) : null;
+  if (presentesEl && presentes.length > 0) {
+    const total = items.length;
+    const feitas = marcados.length;
+    const marcosAlcancados = [];
+    for (let m = passoMarco; m <= feitas; m += passoMarco) marcosAlcancados.push(m);
+
+    function presentesDisponiveis() {
+      const jaEscolhidos = Object.values(presentesEscolhidos);
+      return presentes.filter((p) => !jaEscolhidos.includes(p));
+    }
+
+    function render() {
+      if (marcosAlcancados.length === 0) {
+        presentesEl.innerHTML = `<p class="conquistas-presente-vazio">Ao completar ${passoMarco} conquistas, um presente é desbloqueado aqui. 🎁</p>`;
+        return;
+      }
+
+      presentesEl.innerHTML = marcosAlcancados.map((marco) => {
+        const escolhido = presentesEscolhidos[marco];
+
+        if (escolhido) {
+          return `
+            <div class="conquistas-presente-card is-escolhido">
+              <p class="conquistas-presente-titulo">🎁 Presente do marco de ${marco} conquistas</p>
+              <p class="conquistas-presente-escolha">Você escolheu: <strong>${escolhido}</strong></p>
+            </div>`;
+        }
+
+        const opcoes = presentesDisponiveis();
+        if (opcoes.length === 0) {
+          return `
+            <div class="conquistas-presente-card">
+              <p class="conquistas-presente-titulo">🎁 Presente do marco de ${marco} conquistas</p>
+              <p class="conquistas-presente-vazio">Acabaram os presentes da lista — hora de adicionar mais em PRESENTES!</p>
+            </div>`;
+        }
+
+        return `
+          <div class="conquistas-presente-card">
+            <p class="conquistas-presente-titulo">🎁 Você desbloqueou um presente no marco de ${marco} conquistas! Escolha um:</p>
+            <div class="conquistas-presente-opcoes" data-marco="${marco}">
+              ${opcoes.map((op) => `<button type="button" class="conquistas-presente-opcao" data-presente="${op}">${op}</button>`).join("")}
+            </div>
+          </div>`;
+      }).join("");
+
+      presentesEl.querySelectorAll(".conquistas-presente-opcoes").forEach((wrap) => {
+        wrap.addEventListener("click", (e) => {
+          const btn = e.target.closest(".conquistas-presente-opcao");
+          if (!btn) return;
+          const marco = wrap.dataset.marco;
+          presentesEscolhidos[marco] = btn.dataset.presente;
+          salvarPresentesEscolhidos(presentesEscolhidos);
+          render();
+        });
+      });
+    }
+
+    render();
+  }
 }
 
 // ---- Carta lacrada da página inicial (envelope que abre ao clicar no selo) ----
