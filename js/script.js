@@ -79,6 +79,7 @@ const RECEITAS = [
   "Jantinha padrão (arroz feijão batata frita e carne de boi)",
   "Katsu Karê",
   "Purê de batata com demiglace",
+  "Nhoque ao molho branco com frango",
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
