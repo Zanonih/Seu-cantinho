@@ -919,8 +919,10 @@ h2.section-title {
 /* -------- Bichinhos animados, soltos por cima da página -------- */
 
 .pet-layer {
-  position: fixed;
-  inset: 0;
+  position: absolute; /* parte da página normal — rola junto com o conteúdo */
+  top: 0;
+  left: 0;
+  width: 100%;
   pointer-events: none;
   z-index: 40; /* abaixo do lightbox (z-index 50), acima do resto */
 }
