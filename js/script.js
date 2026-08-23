@@ -1074,25 +1074,6 @@ function initPetScene(pets) {
     document.body.appendChild(layer);
   }
 
-  // ---- "Gruda" a camada dos bichinhos na tela manualmente ao rolar ----
-  // Em vez de confiar em position:fixed (que alguns navegadores, principalmente
-  // os embutidos dentro de apps tipo WhatsApp/Instagram, não respeitam direito),
-  // deixamos a camada como position:absolute e a acompanhamos via JS, deslocando
-  // ela exatamente pela quantidade rolada. Assim ela sempre cobre a área visível.
-  let scrollTicking = false;
-  function sincronizarComScroll() {
-    layer.style.transform = `translateY(${window.scrollY}px)`;
-    scrollTicking = false;
-  }
-  function aoRolar() {
-    if (scrollTicking) return;
-    scrollTicking = true;
-    requestAnimationFrame(sincronizarComScroll);
-  }
-  sincronizarComScroll();
-  window.addEventListener("scroll", aoRolar, { passive: true });
-  window.addEventListener("resize", sincronizarComScroll);
-
   class Bichinho {
     constructor(config, estadoSalvo) {
       this.config = config;
