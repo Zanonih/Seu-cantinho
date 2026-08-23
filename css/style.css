@@ -923,6 +923,8 @@ h2.section-title {
   inset: 0;
   pointer-events: none;
   z-index: 40; /* abaixo do lightbox (z-index 50), acima do resto */
+  transform: translateZ(0); /* força o navegador a tratar isso como camada própria, sem "grudar" no scroll */
+  will-change: transform;
 }
 
 .pet-layer .pet-sprite {
@@ -932,7 +934,7 @@ h2.section-title {
   image-rendering: crisp-edges;
   pointer-events: auto;
   cursor: grab;
-  touch-action: none;
+  touch-action: pan-y pan-x; /* no toque, deixa a página rolar em vez de "prender" o bicho */
   user-select: none;
   -webkit-user-select: none;
   will-change: left, top, transform;
