@@ -1389,6 +1389,105 @@ h2.section-title {
   transform: translateY(-1px);
 }
 
+/* -------- Página da suculenta -------- */
+
+.suculenta-imagem {
+  display: block;
+  margin: 1rem auto 0;
+  width: 170px;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.suculenta-detalhes {
+  list-style: none;
+  margin: 1.4rem auto 0;
+  padding: 0;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  font-family: var(--body);
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.suculenta-cuidados {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.2rem 0 0;
+  flex-wrap: wrap;
+}
+
+.suculenta-botao-cuidado {
+  font-family: var(--body);
+  font-size: 0.88rem;
+  color: var(--wine);
+  background: var(--paper);
+  border: 1px solid rgba(110, 43, 58, 0.25);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.suculenta-botao-cuidado:hover:not(:disabled) {
+  background: var(--wine);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
+.suculenta-botao-cuidado:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+.suculenta-botao-cuidado:disabled,
+.suculenta-botao-cuidado.is-feito {
+  cursor: default;
+  background: rgba(110, 43, 58, 0.08);
+  color: var(--ink-soft);
+  border-color: rgba(110, 43, 58, 0.15);
+}
+
+.suculenta-imagem.is-feliz {
+  animation: suculenta-pulo 0.6s ease;
+}
+
+@keyframes suculenta-pulo {
+  0%   { transform: translateY(0) scale(1); }
+  30%  { transform: translateY(-10px) scale(1.06); }
+  55%  { transform: translateY(0) scale(0.97); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suculenta-imagem.is-feliz { animation: none; }
+}
+
+/* -------- Ela murcha um pouco (só visual) se ninguém regar/dar sol -------- */
+
+.suculenta-imagem.is-sedenta-leve {
+  filter: saturate(0.75) brightness(0.94);
+  transform: rotate(-2deg);
+}
+
+.suculenta-imagem.is-sedenta-forte {
+  filter: saturate(0.45) brightness(0.86) sepia(0.12);
+  transform: rotate(-4deg) scale(0.97);
+  opacity: 0.9;
+}
+
+.suculenta-sede-aviso {
+  min-height: 1.2em;
+  margin: 0.6rem auto 0;
+  font-family: var(--body);
+  font-size: 0.85rem;
+  color: var(--rose-deep);
+}
+
 /* -------- Cards de bichinho clicáveis (abrem álbum) -------- */
 
 .pet-bio-card {

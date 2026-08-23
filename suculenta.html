@@ -15,12 +15,12 @@
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
 <link rel="icon" href="img/favicon/favicon.ico">
-<title>Assistir · Para Você</title>
+<title>Suculenta · Para Você</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="filmes">
+<body data-page="suculenta">
 
 <header class="site-header">
   <p class="site-subtitle">seu cantinho</p>
@@ -54,28 +54,34 @@
 
 <main>
   <section class="card" style="text-align:center;">
-    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🎬</div>
-    <h2 class="section-title" style="margin-top:1rem;">O que Assistir?</h2>
+    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🌱</div>
+    <h2 class="section-title" style="margin-top:1rem;">Nossa suculenta</h2>
+    <p class="lede" style="margin:0 auto;">
+      Ela cresce com cada desejo realizado, cada filme/série assistido e cada
+      receita feita — inclusive os que caem na roleta.
+    </p>
 
-    <div class="draw-stage">
-      <div class="slot-machine">
-        <div class="slot-lights" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="reel-window" id="filme-reel-window">
-          <div class="reel-marker" aria-hidden="true"></div>
-          <div class="reel-list" id="filme-reel-list">
-            <div class="reel-item">?</div>
-          </div>
-        </div>
-      </div>
-      <div class="draw-actions">
-        <button class="btn" id="filme-sortear">Sortear 🎞️</button>
-        <button class="btn btn-ghost" id="filme-reset">Recomeçar ↺</button>
-      </div>
-      <p class="draw-note" id="filme-draw-note">clique quantas vezes quiser</p>
-      <ul class="draw-pool" id="filme-pool-list" aria-label="Lista de filmes"></ul>
+    <img id="suculenta-imagem" class="suculenta-imagem" src="img/suculenta/nivel1.gif" alt="Nossa suculenta" width="204" height="210">
+
+    <div class="suculenta-cuidados">
+      <button type="button" id="suculenta-regar" class="suculenta-botao-cuidado">💧 Regar</button>
+      <button type="button" id="suculenta-sol" class="suculenta-botao-cuidado">☀️ Dar sol</button>
     </div>
+
+    <p class="carta-titulo" id="suculenta-nome" style="margin-top:0.6rem;"></p>
+
+    <div class="conquistas-progresso" id="suculenta-progresso" style="max-width:360px;"></div>
+    <p class="conquistas-progresso-legenda" id="suculenta-legenda"></p>
+    <p class="suculenta-sede-aviso" id="suculenta-sede"></p>
+
+    <ul class="suculenta-detalhes" id="suculenta-detalhes"></ul>
+
+    <p class="wishlist-contador" style="margin-top:1.6rem;">
+      Quer ajudar ela a crescer? Marca um desejo em
+      <a href="desejos.html" style="text-decoration:underline; color:var(--wine);">Desejos</a>,
+      assiste algo em <a href="filmes.html" style="text-decoration:underline; color:var(--wine);">Assistir</a>
+      ou cozinha algo em <a href="receitas.html" style="text-decoration:underline; color:var(--wine);">Receitas</a>.
+    </p>
   </section>
 </main>
 
@@ -98,17 +104,28 @@
 </script>
 <script>
   initLoveCounter("2025-06-19T23:35:00");
-</script>
-<script>
-  initReel({
-    buttonId: "filme-sortear",
-    resetButtonId: "filme-reset",
-    windowId: "filme-reel-window",
-    listId: "filme-reel-list",
-    poolListId: "filme-pool-list",
-    noteId: "filme-draw-note",
-    items: FILMES,
-    storageKey: "filmes",
+
+  function atualizarSuculenta() {
+    initSuculenta({
+      imagemId: "suculenta-imagem",
+      nomeId: "suculenta-nome",
+      progressoId: "suculenta-progresso",
+      legendaId: "suculenta-legenda",
+      sedeId: "suculenta-sede",
+      detalhesId: "suculenta-detalhes",
+      desejos: DESEJOS,
+      filmes: FILMES,
+      receitas: RECEITAS,
+    });
+  }
+
+  atualizarSuculenta();
+
+  initSuculentaCuidados({
+    regarBtnId: "suculenta-regar",
+    solBtnId: "suculenta-sol",
+    imagemId: "suculenta-imagem",
+    aoAtualizar: atualizarSuculenta,
   });
 </script>
 <script src="js/pets-data.js"></script>
