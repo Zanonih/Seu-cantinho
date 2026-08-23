@@ -919,14 +919,10 @@ h2.section-title {
 /* -------- Bichinhos animados, soltos por cima da página -------- */
 
 .pet-layer {
-  position: absolute; /* o JS "gruda" isso na tela manualmente ao rolar (veja script.js) */
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
+  position: fixed;
+  inset: 0;
   pointer-events: none;
   z-index: 40; /* abaixo do lightbox (z-index 50), acima do resto */
-  will-change: transform;
 }
 
 .pet-layer .pet-sprite {
