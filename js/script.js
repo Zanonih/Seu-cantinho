@@ -1074,6 +1074,18 @@ function initPetScene(pets) {
     document.body.appendChild(layer);
   }
 
+  // ---- Bichinhos agora vivem na página inteira (não só na tela visível),
+  // então "até onde dá pra andar" é a altura de TODA a página, não só a
+  // altura da janela. Assim eles podem estar mais pra baixo, aparecendo só
+  // quando a pessoa rola até lá — igual qualquer outra coisa da página. ----
+  function alturaPagina() {
+    return Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      window.innerHeight
+    );
+  }
+
   class Bichinho {
     constructor(config, estadoSalvo) {
       this.config = config;
@@ -1092,7 +1104,7 @@ function initPetScene(pets) {
       this.el.addEventListener("pointercancel", (e) => this.onPointerUp(e));
 
       const maxXInicial = Math.max(MARGIN, window.innerWidth - 120);
-      const maxYInicial = Math.max(MARGIN, window.innerHeight - DISPLAY_HEIGHT - MARGIN);
+      const maxYInicial = Math.max(MARGIN, alturaPagina() - DISPLAY_HEIGHT - MARGIN);
 
       if (estadoSalvo) {
         // retoma de onde parou na página anterior
@@ -1222,8 +1234,11 @@ function initPetScene(pets) {
       this.dragging = true;
       this.vx = 0;
       this.vy = 0;
-      this.dragOffsetX = e.clientX - this.x;
-      this.dragOffsetY = e.clientY - this.y;
+      // e.clientY é relativo à TELA; como o bicho agora é posicionado
+      // relativo à PÁGINA (que pode estar rolada), somamos o scroll atual
+      // pra converter a coordenada certinho.
+      this.dragOffsetX = (e.clientX + window.scrollX) - this.x;
+      this.dragOffsetY = (e.clientY + window.scrollY) - this.y;
       this.el.classList.add("is-dragging");
       try { this.el.setPointerCapture(e.pointerId); } catch (err) { /* ignora */ }
       e.preventDefault();
@@ -1232,9 +1247,9 @@ function initPetScene(pets) {
     onPointerMove(e) {
       if (!this.dragging) return;
       const maxX = Math.max(MARGIN, window.innerWidth - this.currentWidth - MARGIN);
-      const maxY = Math.max(MARGIN, window.innerHeight - DISPLAY_HEIGHT - MARGIN);
-      this.x = Math.min(Math.max(e.clientX - this.dragOffsetX, MARGIN), maxX);
-      this.y = Math.min(Math.max(e.clientY - this.dragOffsetY, MARGIN), maxY);
+      const maxY = Math.max(MARGIN, alturaPagina() - DISPLAY_HEIGHT - MARGIN);
+      this.x = Math.min(Math.max((e.clientX + window.scrollX) - this.dragOffsetX, MARGIN), maxX);
+      this.y = Math.min(Math.max((e.clientY + window.scrollY) - this.dragOffsetY, MARGIN), maxY);
       this.el.style.left = this.x + "px";
       this.el.style.top = this.y + "px";
     }
@@ -1258,7 +1273,7 @@ function initPetScene(pets) {
       }
 
       const maxX = Math.max(MARGIN, window.innerWidth - this.currentWidth - MARGIN);
-      const maxY = Math.max(MARGIN, window.innerHeight - DISPLAY_HEIGHT - MARGIN);
+      const maxY = Math.max(MARGIN, alturaPagina() - DISPLAY_HEIGHT - MARGIN);
 
       if (!reduzMovimento) {
         if (this.state === "andando") {
@@ -1277,7 +1292,8 @@ function initPetScene(pets) {
         }
       }
 
-      // mantém dentro da tela mesmo que a janela tenha sido redimensionada
+      // mantém dentro da página mesmo que a janela tenha sido redimensionada
+      // ou a página tenha mudado de altura (fotos carregando etc.)
       this.x = Math.min(Math.max(this.x, MARGIN), maxX);
       this.y = Math.min(Math.max(this.y, MARGIN), maxY);
 
