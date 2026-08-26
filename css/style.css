@@ -903,6 +903,11 @@ h2.section-title {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.seal-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 55%, transparent);
+}
+
 .seal-img {
   width: clamp(96px, 22vw, 140px);
   height: auto;
