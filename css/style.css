@@ -859,8 +859,8 @@ h2.section-title {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(155deg, #F3E6DA 0%, #E9D6C4 55%, #E3CBB6 100%);
-  transition: opacity 0.5s ease 0.55s, transform 0.5s ease 0.55s;
+    linear-gradient(155deg, var(--paper) 0%, var(--blush) 55%, color-mix(in srgb, var(--blush) 75%, var(--ink)) 100%);
+  transition: opacity 0.5s ease 0.55s, transform 0.5s ease 0.55s, background 0.4s ease;
 }
 
 .envelope-pocket::before {
@@ -880,11 +880,11 @@ h2.section-title {
   left: 0;
   right: 0;
   height: 52%;
-  background: linear-gradient(160deg, #F0E1D3 0%, #DFC5AC 100%);
+  background: linear-gradient(160deg, var(--blush) 0%, color-mix(in srgb, var(--blush) 65%, var(--ink)) 100%);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
   transform: rotateX(0deg);
-  transition: transform 0.65s cubic-bezier(.45,.1,.25,1) 0.12s;
+  transition: transform 0.65s cubic-bezier(.45,.1,.25,1) 0.12s, background 0.4s ease;
   backface-visibility: hidden;
   box-shadow: 0 3px 10px rgba(74, 24, 32, 0.12);
 }
