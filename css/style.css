@@ -15,6 +15,12 @@
   --ink-soft: #6B5750;
   --gold: #C9A24B;
 
+  /* Versões fixas (não trocam no modo escuro) — pra usos onde a cor em si
+     faz parte do "objeto" (ex: a caixa de madeira/couro da roleta), e não
+     deveria clarear só porque virou modo noturno. */
+  --wine-fixed: #6E2B3A;
+  --rose-deep-fixed: #A85A66;
+
   --display: 'Cormorant Garamond', serif;
   --body: 'Jost', sans-serif;
 
@@ -429,7 +435,7 @@ h2.section-title {
   padding: 2.4rem 1rem;
   border: 1px dashed var(--rose-deep);
   border-radius: var(--radius);
-  background: rgba(255,255,255,0.35);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
 }
 
 .draw-result {
@@ -568,7 +574,7 @@ h2.section-title {
   margin: 2rem auto 0;
   padding: 1.1rem 1rem 1.3rem;
   border-radius: 20px;
-  background: linear-gradient(160deg, var(--wine) 0%, var(--rose-deep) 100%);
+  background: linear-gradient(160deg, var(--wine-fixed) 0%, var(--rose-deep-fixed) 100%);
   box-shadow: 0 14px 34px rgba(110,43,58,0.28), inset 0 2px 4px rgba(255,255,255,0.25);
 }
 
@@ -656,8 +662,8 @@ h2.section-title {
   color: var(--ink-soft);
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(110,43,58,0.12);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--wine) 20%, transparent);
   transition: opacity 0.3s ease;
 }
 
