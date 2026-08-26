@@ -63,6 +63,29 @@ body {
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
 
+/* -------- Fundo Aurora (site inteiro) -------- */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(40px);
+  opacity: 0.7;
+}
+
+/* Garante que o conteúdo fique por cima do canvas */
+.site-header,
+main,
+.site-footer,
+.site-lock,
+.bgm-toggle,
+.theme-toggle {
+  position: relative;
+  z-index: 1;
+}
+
 a { color: inherit; text-decoration: none; }
 
 :focus-visible {
@@ -1687,7 +1710,10 @@ h2.section-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--cream);
+  background: var(--cream); /* navegador sem suporte a color-mix() cai aqui — opaco, seguro */
+  background: color-mix(in srgb, var(--cream) 92%, transparent);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
   padding: 1.5rem;
   transition: opacity 0.5s ease;
 }

@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="musica">
+  <canvas id="aurora-bg" class="aurora-bg" aria-hidden="true"></canvas>
 
 <header class="site-header">
   <p class="site-subtitle">seu cantinho</p>
@@ -51,6 +52,7 @@
   </nav>
 </header>
 
+<div id="page-content">
 <main>
   <section class="card">
     <div class="record" aria-hidden="true"></div>
@@ -66,26 +68,26 @@
     📍 -19.932596, -43.938312
   </a>
 </footer>
+</div><!-- /#page-content -->
 
 <script src="js/script.js"></script>
+<script src="js/album-data.js"></script>
+<script src="js/bichinhos-data.js"></script>
+<script src="js/pets-data.js"></script>
 <audio id="bgm-audio" src="audio/musica-fundo.mp3" preload="auto" loop></audio>
 <button type="button" id="bgm-toggle" class="bgm-toggle" aria-pressed="false" aria-label="Tocar música de fundo">▶️</button>
 <button type="button" id="theme-toggle" class="theme-toggle">🌙</button>
 <script>
   initBackgroundMusic(13, 0.4);
-</script>
-<script>
   initThemeToggle();
-</script>
-<script>
   initLoveCounter("2025-06-19T23:35:00");
-</script>
-<script>
-  renderPlaylists("playlist-grid", PLAYLISTS);
-</script>
-<script src="js/pets-data.js"></script>
-<script>
   initPetScene(PETS_BICHINHOS);
+  initAuroraBackground();
+</script>
+<script src="js/router.js"></script>
+
+<script data-page-init>
+  renderPlaylists("playlist-grid", PLAYLISTS);
 </script>
 </body>
 </html>

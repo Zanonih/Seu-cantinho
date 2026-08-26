@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="inicio">
+  <canvas id="aurora-bg" class="aurora-bg" aria-hidden="true"></canvas>
   <div id="site-lock" class="site-lock">
     <div class="site-lock-card">
       <p class="site-lock-question">
@@ -64,6 +65,7 @@
   </nav>
 </header>
 
+<div id="page-content">
 <main>
   <section class="card letter-card" id="letter-card">
 
@@ -101,27 +103,29 @@
     📍 -19.932596, -43.938312
   </a>
 </footer>
+</div><!-- /#page-content -->
 
 <script src="js/script.js"></script>
 <script>
   initSiteLock("Maia");
 </script>
+<script src="js/album-data.js"></script>
+<script src="js/bichinhos-data.js"></script>
+<script src="js/pets-data.js"></script>
 <audio id="bgm-audio" src="audio/musica-fundo.mp3" preload="auto" loop></audio>
 <button type="button" id="bgm-toggle" class="bgm-toggle" aria-pressed="false" aria-label="Tocar música de fundo">▶️</button>
 <button type="button" id="theme-toggle" class="theme-toggle">🌙</button>
 <script>
   initBackgroundMusic(13, 0.4);
-</script>
-<script>
   initThemeToggle();
-</script>
-<script>
-  initLetterSeal();
   initLoveCounter("2025-06-19T23:35:00");
-</script>
-<script src="js/pets-data.js"></script>
-<script>
   initPetScene(PETS_BICHINHOS);
+  initAuroraBackground();
+</script>
+<script src="js/router.js"></script>
+
+<script data-page-init>
+  initLetterSeal();
 </script>
 
 </body>
