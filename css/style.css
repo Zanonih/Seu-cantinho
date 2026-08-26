@@ -50,7 +50,25 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rose-deep) var(--cream);
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--rose-deep);
+  border-radius: 999px;
+  border: 2px solid var(--cream);
+}
 
 body {
   margin: 0;
