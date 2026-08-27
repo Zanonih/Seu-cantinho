@@ -6,7 +6,7 @@
 const FILMES = [
   "Saga Crepúsculo",
   "Teen Wolf",
-  "Hunter x Hunter",
+  "Kitty baixa renda",
   "Jujutsu Kaisen",
   "Crash Landing on You",
   "It's Okay to Not Be Okay",
