@@ -41,6 +41,8 @@ const FILMES = [
   "Tenet",
   "Oppenheimer",
   "Avatar",
+  "Lanters",
+  "Fullmetal Alchemist: Brotherhood"
   // adicione mais filmes e séries de vocês aqui
 ];
 
