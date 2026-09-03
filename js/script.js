@@ -680,10 +680,12 @@ function initWheel(config) {
 
       const centroFatia = inicio + anguloFatia / 2;
       const [lx, ly] = ponto(centroFatia, RAIO * 0.62);
-      let anguloTexto = centroFatia;
-      if (anguloTexto > 90 && anguloTexto < 270) anguloTexto -= 180; // mantém legível na metade de baixo
+      // sem "virar" o texto na metade de baixo: mantendo o mesmo ângulo da
+      // fatia pra todo mundo, o texto sempre fica de pé certinho no exato
+      // instante em que aquela fatia para debaixo da setinha (é só ali que
+      // realmente precisa estar legível).
       const rotulo = texto.length > 16 ? texto.slice(0, 15) + "…" : texto;
-      interno += `<text x="${lx}" y="${ly}" transform="rotate(${anguloTexto} ${lx} ${ly})" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="var(--body)" fill="${cor.texto}">${escaparTexto(rotulo)}</text>`;
+      interno += `<text x="${lx}" y="${ly}" transform="rotate(${centroFatia} ${lx} ${ly})" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="var(--body)" fill="${cor.texto}">${escaparTexto(rotulo)}</text>`;
     });
 
     svg.innerHTML = interno;
@@ -699,6 +701,9 @@ function initWheel(config) {
     }
     desenharRoleta(opcoes);
   }
+
+  let idTimeoutSeguranca = null;
+  let pararDeEscutarTransicao = null;
 
   spinBtn.addEventListener("click", () => {
     const opcoes = opcoesPreenchidas();
@@ -723,31 +728,53 @@ function initWheel(config) {
     const atualMod = ((rotacaoAtual % 360) + 360) % 360;
     const diferenca = (alvoMod - atualMod + 360) % 360;
     const novaRotacao = rotacaoAtual + voltasExtras * 360 + diferenca;
-    const duracao = (4 + Math.random() * 1.2).toFixed(2);
+    const duracaoSeg = 4 + Math.random() * 1.2;
 
-    spinner.style.transition = `transform ${duracao}s cubic-bezier(0.12, 0.68, 0.16, 1)`;
+    spinner.style.transition = `transform ${duracaoSeg.toFixed(2)}s cubic-bezier(0.12, 0.68, 0.16, 1)`;
     spinner.style.transform = `rotate(${novaRotacao}deg)`;
     rotacaoAtual = novaRotacao;
 
-    spinner.addEventListener("transitionend", function aoTerminar() {
-      spinner.removeEventListener("transitionend", aoTerminar);
+    let finalizado = false;
+    function finalizarGiro() {
+      if (finalizado) return;
+      finalizado = true;
+      clearTimeout(idTimeoutSeguranca);
+      pararDeEscutarTransicao = null;
       girando = false;
       spinner.classList.add("landed");
       if (resultEl) resultEl.textContent = `🎉 ${opcoes[indiceSorteado]}`;
       if (resetBtn) resetBtn.disabled = false;
       atualizarEstadoBotao();
-    }, { once: true });
+    }
+
+    function aoTerminarTransicao(e) {
+      if (e.target !== spinner || e.propertyName !== "transform") return;
+      spinner.removeEventListener("transitionend", aoTerminarTransicao);
+      finalizarGiro();
+    }
+    spinner.addEventListener("transitionend", aoTerminarTransicao);
+    pararDeEscutarTransicao = () => spinner.removeEventListener("transitionend", aoTerminarTransicao);
+
+    // rede de segurança: se o navegador nunca disparar o "transitionend"
+    // (aba em segundo plano, app trocado no celular no meio do giro etc.),
+    // finaliza sozinho um pouco depois do tempo esperado — assim o botão
+    // nunca fica travado pra sempre.
+    idTimeoutSeguranca = setTimeout(finalizarGiro, duracaoSeg * 1000 + 500);
   });
 
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
-      if (girando) return;
+      // sempre funciona, mesmo que a roleta tenha ficado travada girando
+      // (ver rede de segurança acima) — é a válvula de escape do usuário.
+      if (pararDeEscutarTransicao) pararDeEscutarTransicao();
+      clearTimeout(idTimeoutSeguranca);
+      girando = false;
+
       container.innerHTML = "";
       criarLinha();
       criarLinha();
       atualizarPlaceholdersEBotoes();
       salvarOpcoes();
-      atualizarEstadoBotao();
 
       svg.innerHTML = "";
       spinner.style.transition = "none";
@@ -755,6 +782,7 @@ function initWheel(config) {
       spinner.classList.remove("landed");
       rotacaoAtual = 0;
       if (resultEl) resultEl.textContent = "";
+      atualizarEstadoBotao();
     });
   }
 }
