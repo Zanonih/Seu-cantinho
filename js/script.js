@@ -5,7 +5,6 @@
 // ---- Listas editáveis: troque pelos filmes, séries e receitas de vocês ----
 const FILMES = [
   "Saga Crepúsculo",
-  "Kitty baixa renda",
   "Divertidamente 2",
   "Enrolados",
   "Frozen 2",
@@ -31,8 +30,7 @@ const FILMES = [
   "O Grande Hotel Budapest",
   "Tenet",
   "Oppenheimer",
-  "Avatar",
-  "Lanters"
+  "Avatar"
   // adicione mais filmes de vocês aqui
 ];
 
@@ -46,7 +44,8 @@ const SERIES = [
   "Hospital Playlist",
   "You",
   "Brooklyn Nine-Nine",
-  "Fullmetal Alchemist: Brotherhood"
+  "Fullmetal Alchemist: Brotherhood",
+  "Lanters"
   // adicione mais séries de vocês aqui
 ];
 
@@ -90,20 +89,13 @@ const RECEITAS = [
 
 const SOBREMESAS = [
   "Brigadeiro",
-  "Pudim de leite",
   "Mousse de maracujá",
   "Petit gâteau",
   "Torta de limão",
-  "Cheesecake",
   "Brownie com sorvete",
   "Bolo de chocolate",
   "Pavê",
-  "Sorvete",
-  "Churros",
-  "Panqueca americana com calda",
-  "Waffle",
-  "Banana caramelizada",
-  "Doce de leite com queijo",
+  "Mousse da Daniela",
   "Bolo de cenoura com cobertura de chocolate",
   // adicione mais sobremesas de vocês aqui
 ];
@@ -626,11 +618,13 @@ function initWheel(config) {
   else { criarLinha(); criarLinha(); }
   garantirLinhaVaziaNoFinal();
   atualizarEstadoBotao();
+  atualizarPreviaRoleta();
 
   container.addEventListener("input", (e) => {
     if (!e.target.classList.contains("wheel-input")) return;
     garantirLinhaVaziaNoFinal();
     atualizarEstadoBotao();
+    atualizarPreviaRoleta();
     salvarOpcoes();
   });
 
@@ -641,11 +635,18 @@ function initWheel(config) {
     botao.closest(".wheel-option-row").remove();
     atualizarPlaceholdersEBotoes();
     atualizarEstadoBotao();
+    atualizarPreviaRoleta();
     salvarOpcoes();
   });
 
   // ---- desenho da roleta em SVG ----
-  const PALETA = ["#F1D3CE", "#C97B84", "#A85A66", "#8C9A7B", "#C9A24B", "#6E2B3A"];
+  // só as duas cores principais do site, alternadas — com a cor do texto
+  // trocando junto pra sempre ficar legível (escuro no fundo claro, e
+  // vice-versa).
+  const PALETA = [
+    { fundo: "#F1D3CE", texto: "#3A2C2E" },
+    { fundo: "#A85A66", texto: "#FBF3EC" },
+  ];
   const RAIO = 148;
   const CENTRO = 150;
 
@@ -675,18 +676,28 @@ function initWheel(config) {
       const inicio = i * anguloFatia;
       const fim = inicio + anguloFatia;
       const cor = PALETA[i % PALETA.length];
-      interno += `<path d="${fatiaPath(inicio, fim)}" fill="${cor}" stroke="var(--cream)" stroke-width="2"></path>`;
+      interno += `<path d="${fatiaPath(inicio, fim)}" fill="${cor.fundo}" stroke="var(--cream)" stroke-width="2"></path>`;
 
       const centroFatia = inicio + anguloFatia / 2;
       const [lx, ly] = ponto(centroFatia, RAIO * 0.62);
       let anguloTexto = centroFatia;
       if (anguloTexto > 90 && anguloTexto < 270) anguloTexto -= 180; // mantém legível na metade de baixo
       const rotulo = texto.length > 16 ? texto.slice(0, 15) + "…" : texto;
-      interno += `<text x="${lx}" y="${ly}" transform="rotate(${anguloTexto} ${lx} ${ly})" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="var(--body)" fill="var(--cream)">${escaparTexto(rotulo)}</text>`;
+      interno += `<text x="${lx}" y="${ly}" transform="rotate(${anguloTexto} ${lx} ${ly})" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="var(--body)" fill="${cor.texto}">${escaparTexto(rotulo)}</text>`;
     });
 
     svg.innerHTML = interno;
     return anguloFatia;
+  }
+
+  function atualizarPreviaRoleta() {
+    if (girando) return;
+    const opcoes = opcoesPreenchidas();
+    if (opcoes.length < 2) {
+      svg.innerHTML = "";
+      return;
+    }
+    desenharRoleta(opcoes);
   }
 
   spinBtn.addEventListener("click", () => {
