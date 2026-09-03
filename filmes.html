@@ -45,6 +45,7 @@
       <li><a href="musica.html" data-page="musica"><span class="icon">🎵</span>Música</a></li>
       <li><a href="filmes.html" data-page="filmes"><span class="icon">🎬</span>Assistir</a></li>
       <li><a href="receitas.html" data-page="receitas"><span class="icon">🍳</span>Receitas</a></li>
+      <li><a href="roleta.html" data-page="roleta"><span class="icon">🎡</span>Roleta</a></li>
       <li><a href="desejos.html" data-page="desejos"><span class="icon">✨</span>Desejos</a></li>
       <li><a href="conquistas.html" data-page="conquistas"><span class="icon">🏆</span>Conquistas</a></li>
       <li><a href="capsula.html" data-page="capsula"><span class="icon">🔒</span>Cápsula</a></li>
@@ -56,7 +57,7 @@
 <main>
   <section class="card" style="text-align:center;">
     <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🎬</div>
-    <h2 class="section-title" style="margin-top:1rem;">O que Assistir?</h2>
+    <h2 class="section-title" style="margin-top:1rem;">Qual filme?</h2>
 
     <div class="draw-stage">
       <div class="slot-machine">
@@ -71,11 +72,36 @@
         </div>
       </div>
       <div class="draw-actions">
-        <button class="btn" id="filme-sortear">Sortear 🎞️</button>
+        <button class="btn" id="filme-sortear">Sortear filme 🎞️</button>
         <button class="btn btn-ghost" id="filme-reset">Recomeçar ↺</button>
       </div>
       <p class="draw-note" id="filme-draw-note">clique quantas vezes quiser</p>
-      <ul class="draw-pool" id="filme-pool-list" aria-label="Lista de filmes"></ul>
+      <p class="draw-count" id="filme-draw-count"></p>
+    </div>
+
+    <hr class="draw-divider" aria-hidden="true">
+
+    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">📺</div>
+    <h2 class="section-title" style="margin-top:1rem;">Ou qual série?</h2>
+
+    <div class="draw-stage">
+      <div class="slot-machine">
+        <div class="slot-lights" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="reel-window" id="serie-reel-window">
+          <div class="reel-marker" aria-hidden="true"></div>
+          <div class="reel-list" id="serie-reel-list">
+            <div class="reel-item">?</div>
+          </div>
+        </div>
+      </div>
+      <div class="draw-actions">
+        <button class="btn" id="serie-sortear">Sortear série 📼</button>
+        <button class="btn btn-ghost" id="serie-reset">Recomeçar ↺</button>
+      </div>
+      <p class="draw-note" id="serie-draw-note">clique quantas vezes quiser</p>
+      <p class="draw-count" id="serie-draw-count"></p>
     </div>
   </section>
 </main>
@@ -110,10 +136,21 @@
     resetButtonId: "filme-reset",
     windowId: "filme-reel-window",
     listId: "filme-reel-list",
-    poolListId: "filme-pool-list",
+    countId: "filme-draw-count",
     noteId: "filme-draw-note",
     items: FILMES,
     storageKey: "filmes",
+  });
+
+  initReel({
+    buttonId: "serie-sortear",
+    resetButtonId: "serie-reset",
+    windowId: "serie-reel-window",
+    listId: "serie-reel-list",
+    countId: "serie-draw-count",
+    noteId: "serie-draw-note",
+    items: SERIES,
+    storageKey: "series",
   });
 </script>
 </body>

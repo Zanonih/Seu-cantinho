@@ -15,12 +15,12 @@
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
 <link rel="icon" href="img/favicon/favicon.ico">
-<title>Conquistas · Para Você</title>
+<title>Roleta · Para Você</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="conquistas">
+<body data-page="roleta">
   <canvas id="aurora-bg" class="aurora-bg" aria-hidden="true"></canvas>
 
 <header class="site-header">
@@ -56,21 +56,26 @@
 <div id="page-content">
 <main>
   <section class="card" style="text-align:center;">
-    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🏆</div>
-    <h2 class="section-title" style="margin-top:1rem;">Conquistas do casal</h2>
-    <p class="lede" style="margin:0 auto;">Cada sonho realizado vira uma medalha na nossa coleção.</p>
+    <div class="wax-seal" aria-hidden="true" style="margin:0 auto;">🎡</div>
+    <h2 class="section-title" style="margin-top:1rem;">Roleta da Sorte</h2>
+    <p class="lede" style="margin:0 auto 1.6rem;">Escreve as opções de hoje e gira pra decidir.</p>
 
-    <p class="conquistas-resumo" id="conquistas-resumo"></p>
-    <div class="conquistas-progresso" id="conquistas-progresso"></div>
-    <div class="conquistas-grid" id="conquistas-grid"></div>
+    <div class="wheel-options" id="roleta-opcoes" aria-label="Opções da roleta"></div>
 
-    <h3 class="section-title" style="margin-top:2.2rem; font-size:1.3rem;">Presentes desbloqueados 🎁</h3>
-    <div class="conquistas-presentes" id="conquistas-presentes"></div>
+    <div class="wheel-stage">
+      <div class="wheel-pin" aria-hidden="true"></div>
+      <div class="wheel-spinner" id="roleta-spinner">
+        <svg id="roleta-svg" viewBox="0 0 300 300"></svg>
+        <div class="wheel-hub" aria-hidden="true"></div>
+      </div>
+    </div>
 
-    <p class="wishlist-contador" style="margin-top:1.8rem;">
-      Quer marcar um sonho novo como realizado? É lá na página de
-      <a href="desejos.html" style="text-decoration:underline; color:var(--wine);">Desejos</a>.
-    </p>
+    <div class="draw-actions">
+      <button class="btn" id="roleta-girar">Girar roleta 🎯</button>
+      <button class="btn btn-ghost" id="roleta-limpar">Limpar ↺</button>
+    </div>
+    <p class="draw-note" id="roleta-nota">preencha pelo menos 2 opções pra girar</p>
+    <p class="draw-result" id="roleta-resultado"></p>
   </section>
 </main>
 
@@ -99,15 +104,14 @@
 <script src="js/router.js"></script>
 
 <script data-page-init>
-  initConquistas({
-    gridId: "conquistas-grid",
-    items: DESEJOS,
-    storageKey: "desejos",
-    resumoId: "conquistas-resumo",
-    progressoId: "conquistas-progresso",
-    presentesId: "conquistas-presentes",
-    presentes: PRESENTES,
-    passoMarco: 5,
+  initWheel({
+    optionsContainerId: "roleta-opcoes",
+    svgId: "roleta-svg",
+    spinButtonId: "roleta-girar",
+    resetButtonId: "roleta-limpar",
+    noteId: "roleta-nota",
+    resultId: "roleta-resultado",
+    storageKey: "geral",
   });
 </script>
 </body>

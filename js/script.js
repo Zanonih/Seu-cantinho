@@ -2,17 +2,10 @@
 // Para Você — lógica compartilhada
 // ============================================
 
-// ---- Listas editáveis: troque pelos filmes e receitas de vocês ----
+// ---- Listas editáveis: troque pelos filmes, séries e receitas de vocês ----
 const FILMES = [
   "Saga Crepúsculo",
-  "Teen Wolf",
   "Kitty baixa renda",
-  "Jujutsu Kaisen",
-  "Crash Landing on You",
-  "It's Okay to Not Be Okay",
-  "Goblin",
-  "Business Proposal",
-  "Hospital Playlist",
   "Divertidamente 2",
   "Enrolados",
   "Frozen 2",
@@ -34,16 +27,27 @@ const FILMES = [
   "Legalmente Loira",
   "Laranja Mecânica",
   "Kill Bill",
-  "You",
-  "Brooklyn Nine-Nine",
   "Ratatouille",
   "O Grande Hotel Budapest",
   "Tenet",
   "Oppenheimer",
   "Avatar",
-  "Lanters",
+  "Lanters"
+  // adicione mais filmes de vocês aqui
+];
+
+const SERIES = [
+  "Teen Wolf",
+  "Jujutsu Kaisen",
+  "Crash Landing on You",
+  "It's Okay to Not Be Okay",
+  "Goblin",
+  "Business Proposal",
+  "Hospital Playlist",
+  "You",
+  "Brooklyn Nine-Nine",
   "Fullmetal Alchemist: Brotherhood"
-  // adicione mais filmes e séries de vocês aqui
+  // adicione mais séries de vocês aqui
 ];
 
 const RECEITAS = [
@@ -82,6 +86,26 @@ const RECEITAS = [
   "Katsu Karê",
   "Purê de batata com demiglace",
   "Nhoque ao molho branco com frango",
+];
+
+const SOBREMESAS = [
+  "Brigadeiro",
+  "Pudim de leite",
+  "Mousse de maracujá",
+  "Petit gâteau",
+  "Torta de limão",
+  "Cheesecake",
+  "Brownie com sorvete",
+  "Bolo de chocolate",
+  "Pavê",
+  "Sorvete",
+  "Churros",
+  "Panqueca americana com calda",
+  "Waffle",
+  "Banana caramelizada",
+  "Doce de leite com queijo",
+  "Bolo de cenoura com cobertura de chocolate",
+  // adicione mais sobremesas de vocês aqui
 ];
 
 // Lista de desejos / sonhos a dois — marque o que já foi feito.
@@ -354,18 +378,21 @@ function initTimeline(containerId, items) {
   }
 }
 
-// ---- Roleta / caça-níquel (sorteio de filme ou receita) ----
-// config: { buttonId, resetButtonId, windowId, listId, poolListId, noteId, items }
-// Cada opção sorteada some do grupo disponível e fica riscada na listinha
-// (por isso nunca repete duas vezes seguidas). O botão de reset devolve
-// tudo pro grupo disponível de novo.
+// ---- Roleta / caça-níquel (sorteio de filme, receita ou sobremesa) ----
+// config: { buttonId, resetButtonId, windowId, listId, poolListId, countId, noteId, items }
+// Cada opção sorteada some do grupo disponível (por isso nunca repete duas
+// vezes seguidas). O botão de reset devolve tudo pro grupo disponível de novo.
+// - poolListId: mostra a listinha completa, com os já sorteados riscados.
+// - countId: mostra só a contagem ("12 de 34 já sorteados"), sem listar os nomes.
+// Pode usar um dos dois, os dois, ou nenhum.
 function initReel(config) {
-  const { buttonId, resetButtonId, windowId, listId, poolListId, noteId, items, storageKey } = config;
+  const { buttonId, resetButtonId, windowId, listId, poolListId, countId, noteId, items, storageKey } = config;
   const button = document.getElementById(buttonId);
   const resetButton = document.getElementById(resetButtonId);
   const windowEl = document.getElementById(windowId);
   const listEl = document.getElementById(listId);
   const poolListEl = poolListId ? document.getElementById(poolListId) : null;
+  const countEl = countId ? document.getElementById(countId) : null;
   const noteEl = noteId ? document.getElementById(noteId) : null;
   if (!button || !windowEl || !listEl || !items || items.length === 0) return;
 
@@ -410,6 +437,13 @@ function initReel(config) {
       const riscado = sorteados.includes(nome);
       return `<li class="${riscado ? "is-drawn" : ""}">${nome}</li>`;
     }).join("");
+  }
+
+  function atualizarContagem() {
+    if (!countEl) return;
+    countEl.textContent = sorteados.length === 0
+      ? `${items.length} opções no total`
+      : `${sorteados.length} de ${items.length} já sorteadas`;
   }
 
   function atualizarEstado() {
@@ -475,6 +509,7 @@ function initReel(config) {
         if (!sorteados.includes(alvo)) sorteados.push(alvo);
         salvarSorteados();
         renderPool();
+        atualizarContagem();
         atualizarEstado();
       }, { once: true });
     }, 180);
@@ -490,15 +525,228 @@ function initReel(config) {
       listEl.style.transition = "none";
       listEl.innerHTML = `<div class="reel-item">?</div>`;
       renderPool();
+      atualizarContagem();
       atualizarEstado();
     });
   }
 
   renderPool();
+  atualizarContagem();
   atualizarEstado();
 }
 
-// ---- Playlists do Spotify ----
+// ---- Roleta giratória (opções escritas na hora, ex: "quem escolhe hoje?") ----
+// config: { optionsContainerId, svgId, spinButtonId, resetButtonId, noteId, resultId, storageKey }
+// Começa com 2 campos de texto vazios; sempre que o último campo visível é
+// preenchido, aparece mais um automaticamente (até um limite). As opções em
+// branco são ignoradas na hora de girar. O texto some sem re-renderizar os
+// campos existentes, então quem está digitando não perde o foco/cursor.
+function initWheel(config) {
+  const { optionsContainerId, svgId, spinButtonId, resetButtonId, noteId, resultId, storageKey } = config;
+  const container = document.getElementById(optionsContainerId);
+  const svg = document.getElementById(svgId);
+  const spinBtn = document.getElementById(spinButtonId);
+  const resetBtn = resetButtonId ? document.getElementById(resetButtonId) : null;
+  const noteEl = noteId ? document.getElementById(noteId) : null;
+  const resultEl = resultId ? document.getElementById(resultId) : null;
+  const spinner = svg ? svg.closest(".wheel-spinner") : null;
+  if (!container || !svg || !spinBtn || !spinner) return;
+
+  const CHAVE = storageKey ? `cantinho:roleta:${storageKey}` : null;
+  const MAX_OPCOES = 12;
+  let girando = false;
+  let rotacaoAtual = 0;
+
+  function carregarOpcoesSalvas() {
+    if (!CHAVE) return null;
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE) || "null");
+      return Array.isArray(salvo) && salvo.length >= 2 ? salvo : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function salvarOpcoes() {
+    if (!CHAVE) return;
+    try {
+      const valores = Array.from(container.querySelectorAll(".wheel-input")).map((i) => i.value);
+      localStorage.setItem(CHAVE, JSON.stringify(valores));
+    } catch {
+      // modo privado etc. — só não persiste
+    }
+  }
+
+  function atualizarPlaceholdersEBotoes() {
+    const linhas = container.querySelectorAll(".wheel-option-row");
+    linhas.forEach((linha, i) => {
+      linha.querySelector(".wheel-input").placeholder = `Opção ${i + 1}`;
+      const remover = linha.querySelector(".wheel-remove");
+      if (remover) remover.hidden = linhas.length <= 2;
+    });
+  }
+
+  function criarLinha(valor = "") {
+    const linha = document.createElement("div");
+    linha.className = "wheel-option-row";
+    linha.innerHTML =
+      '<input type="text" class="wheel-input" maxlength="40" autocomplete="off">' +
+      '<button type="button" class="wheel-remove" aria-label="Remover esta opção" hidden>×</button>';
+    linha.querySelector(".wheel-input").value = valor;
+    container.appendChild(linha);
+    return linha;
+  }
+
+  function garantirLinhaVaziaNoFinal() {
+    const linhas = container.querySelectorAll(".wheel-option-row");
+    const ultimoInput = linhas[linhas.length - 1]?.querySelector(".wheel-input");
+    if (ultimoInput && ultimoInput.value.trim() !== "" && linhas.length < MAX_OPCOES) {
+      criarLinha();
+    }
+    atualizarPlaceholdersEBotoes();
+  }
+
+  function opcoesPreenchidas() {
+    return Array.from(container.querySelectorAll(".wheel-input"))
+      .map((i) => i.value.trim())
+      .filter((v) => v !== "");
+  }
+
+  function atualizarEstadoBotao() {
+    const valido = opcoesPreenchidas().length >= 2;
+    spinBtn.disabled = girando || !valido;
+    if (noteEl && !girando) {
+      noteEl.textContent = valido ? "clique quantas vezes quiser" : "preencha pelo menos 2 opções pra girar";
+    }
+  }
+
+  // ---- estado inicial: opções salvas ou 2 campos em branco ----
+  const salvas = carregarOpcoesSalvas();
+  if (salvas) salvas.forEach((valor) => criarLinha(valor));
+  else { criarLinha(); criarLinha(); }
+  garantirLinhaVaziaNoFinal();
+  atualizarEstadoBotao();
+
+  container.addEventListener("input", (e) => {
+    if (!e.target.classList.contains("wheel-input")) return;
+    garantirLinhaVaziaNoFinal();
+    atualizarEstadoBotao();
+    salvarOpcoes();
+  });
+
+  container.addEventListener("click", (e) => {
+    const botao = e.target.closest(".wheel-remove");
+    if (!botao) return;
+    if (container.querySelectorAll(".wheel-option-row").length <= 2) return;
+    botao.closest(".wheel-option-row").remove();
+    atualizarPlaceholdersEBotoes();
+    atualizarEstadoBotao();
+    salvarOpcoes();
+  });
+
+  // ---- desenho da roleta em SVG ----
+  const PALETA = ["#F1D3CE", "#C97B84", "#A85A66", "#8C9A7B", "#C9A24B", "#6E2B3A"];
+  const RAIO = 148;
+  const CENTRO = 150;
+
+  function ponto(anguloDeg, raio) {
+    const rad = (anguloDeg - 90) * Math.PI / 180;
+    return [CENTRO + raio * Math.cos(rad), CENTRO + raio * Math.sin(rad)];
+  }
+
+  function fatiaPath(inicio, fim) {
+    const [x1, y1] = ponto(inicio, RAIO);
+    const [x2, y2] = ponto(fim, RAIO);
+    const arcoGrande = (fim - inicio) > 180 ? 1 : 0;
+    return `M ${CENTRO} ${CENTRO} L ${x1} ${y1} A ${RAIO} ${RAIO} 0 ${arcoGrande} 1 ${x2} ${y2} Z`;
+  }
+
+  function escaparTexto(txt) {
+    return txt.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function desenharRoleta(opcoes) {
+    const n = opcoes.length;
+    const anguloFatia = 360 / n;
+    const fontSize = n > 8 ? 9 : n > 6 ? 10.5 : 12.5;
+    let interno = "";
+
+    opcoes.forEach((texto, i) => {
+      const inicio = i * anguloFatia;
+      const fim = inicio + anguloFatia;
+      const cor = PALETA[i % PALETA.length];
+      interno += `<path d="${fatiaPath(inicio, fim)}" fill="${cor}" stroke="var(--cream)" stroke-width="2"></path>`;
+
+      const centroFatia = inicio + anguloFatia / 2;
+      const [lx, ly] = ponto(centroFatia, RAIO * 0.62);
+      let anguloTexto = centroFatia;
+      if (anguloTexto > 90 && anguloTexto < 270) anguloTexto -= 180; // mantém legível na metade de baixo
+      const rotulo = texto.length > 16 ? texto.slice(0, 15) + "…" : texto;
+      interno += `<text x="${lx}" y="${ly}" transform="rotate(${anguloTexto} ${lx} ${ly})" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="var(--body)" fill="var(--cream)">${escaparTexto(rotulo)}</text>`;
+    });
+
+    svg.innerHTML = interno;
+    return anguloFatia;
+  }
+
+  spinBtn.addEventListener("click", () => {
+    const opcoes = opcoesPreenchidas();
+    if (girando || opcoes.length < 2) return;
+    girando = true;
+    spinner.classList.remove("landed");
+    if (resultEl) resultEl.textContent = "";
+    if (resetBtn) resetBtn.disabled = true;
+    if (noteEl) noteEl.textContent = "girando...";
+    atualizarEstadoBotao();
+
+    const anguloFatia = desenharRoleta(opcoes);
+    const indiceSorteado = Math.floor(Math.random() * opcoes.length);
+    // sorteia um ponto dentro da fatia, com folga nas bordas pra nunca
+    // parecer que caiu bem em cima da linha divisória
+    const folga = anguloFatia * 0.15;
+    const anguloDentroFatia = folga + Math.random() * (anguloFatia - folga * 2);
+    const anguloAlvo = indiceSorteado * anguloFatia + anguloDentroFatia;
+
+    const voltasExtras = 5 + Math.floor(Math.random() * 3); // varia a cada giro
+    const alvoMod = (360 - anguloAlvo) % 360;
+    const atualMod = ((rotacaoAtual % 360) + 360) % 360;
+    const diferenca = (alvoMod - atualMod + 360) % 360;
+    const novaRotacao = rotacaoAtual + voltasExtras * 360 + diferenca;
+    const duracao = (4 + Math.random() * 1.2).toFixed(2);
+
+    spinner.style.transition = `transform ${duracao}s cubic-bezier(0.12, 0.68, 0.16, 1)`;
+    spinner.style.transform = `rotate(${novaRotacao}deg)`;
+    rotacaoAtual = novaRotacao;
+
+    spinner.addEventListener("transitionend", function aoTerminar() {
+      spinner.removeEventListener("transitionend", aoTerminar);
+      girando = false;
+      spinner.classList.add("landed");
+      if (resultEl) resultEl.textContent = `🎉 ${opcoes[indiceSorteado]}`;
+      if (resetBtn) resetBtn.disabled = false;
+      atualizarEstadoBotao();
+    }, { once: true });
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      if (girando) return;
+      container.innerHTML = "";
+      criarLinha();
+      criarLinha();
+      atualizarPlaceholdersEBotoes();
+      salvarOpcoes();
+      atualizarEstadoBotao();
+
+      svg.innerHTML = "";
+      spinner.style.transition = "none";
+      spinner.style.transform = "rotate(0deg)";
+      spinner.classList.remove("landed");
+      rotacaoAtual = 0;
+      if (resultEl) resultEl.textContent = "";
+    });
+  }
+}
 function renderPlaylists(containerId, playlists) {
   const el = document.getElementById(containerId);
   if (!el) return;

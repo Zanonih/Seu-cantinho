@@ -20,7 +20,8 @@ Site-presente com álbum de fotos, bichinhos, música e sorteadores de filme/rec
   `js/pets-data.js`.
 - **Músicas**: edite a lista `MUSICAS` em `js/script.js`. Se quiser incorporar uma
   playlist de verdade do Spotify, há instruções em comentário dentro de `musica.html`.
-- **Filmes e receitas**: edite as listas `FILMES` e `RECEITAS` em `js/script.js`.
+- **Filmes, séries, receitas e sobremesas**: edite as listas `FILMES`, `SERIES`,
+  `RECEITAS` e `SOBREMESAS` em `js/script.js`.
 - **Cores e fontes**: tudo fica em `css/style.css`, no bloco `:root` no topo do arquivo.
 
 Bom presente! 🌸
